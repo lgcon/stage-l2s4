@@ -31,8 +31,20 @@
 	| Facebook Graph  |     Amazon     | (many) others  |
 	| --------------- | -------------- | -------------- |
 	| 'locale' param  |  Sub-domains   | Http headers   |
-	
-###### Day 3
+
+- Suggestions:
+	- For interactive autocomplete dispatched on the onchange event: 'limit' parameter
+	- Case of use:
+		1. User starts to fill a field
+		2. No param available so far: request --> limit = value
+		3. Client completes the fields with corresponding values
+	- Still an issue: data is not avalable insed the given limit
+		- Selective API? Chained requests? 
+	- Best solution: use wildcard in parameters + limit parameter
+
+##### Day 3
 
 - Set up a netmagis environement on a virtual machine at home (TODO complete)
 - Try the API rest TODO
+
+
