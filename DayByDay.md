@@ -55,8 +55,7 @@
 #### Day 4
 
 - Analysis of the forms of the web client in relation to is database
-	- * Note: redundancy in pages search/whoami, same action different method? (whoami uses an url query)*
-- Figure out what fields should menage the app TODO
-- Find API corrispondence TODO
+- Filter fields used in the web client
+- Find API corrispondence
 
 
