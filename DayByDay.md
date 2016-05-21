@@ -59,3 +59,13 @@
 - Find API corrispondence
 
 
+#### Weekend
+
+- Searching for a transpiller I just realized there are two languages called JSX...
+- Does using react + react-dom + browserify packages add innecessary complexity to the project?
+- Trying babel transpiller (and realizing that ES6 is pretty cool...unsafe maybe, but cool)
+- I finally choosed to use webpack to build the app.
+
+
+
+
