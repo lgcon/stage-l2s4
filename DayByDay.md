@@ -66,6 +66,9 @@
 - Trying babel transpiller (and realizing that ES6 is pretty cool...unsafe maybe, but cool)
 - I finally choosed to use webpack to build the app.
 - First test on netmagis (just autocomplete)
+- Bringing a bit of genericity to the app:
+	- Use a named div and a function named getSuggestion_name (where name is the name of the div)
+	- All the properties are passed from the div
 
 
 
