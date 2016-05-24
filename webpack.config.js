@@ -2,7 +2,7 @@ const webpack = require('webpack');
 
 module.exports = {
     entry: {
-	test: './src/test.jsx'
+	test: './src/test.jsx',
     },
     output: {
         path: 'dist/',

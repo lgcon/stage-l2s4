@@ -3,18 +3,6 @@ import ReactDOM from 'react-dom';
 import Autosuggest from 'react-autosuggest';
 
 
-const networks = [ '192.0.2.0/23', '203.34.9.0/24', '188.231.0.0/16'];
-
-function getSuggestions_cidr(value) {
-  const inputValue = value.trim().toLowerCase();
-  const inputLength = inputValue.length;
-
-  return inputLength === 0 ? [] : networks.filter( network =>
-    network.toLowerCase().slice(0, inputLength) === inputValue
-  );
-}
-
-
 
 /* Common part */
 
@@ -28,9 +16,6 @@ function renderSuggestion(suggestion) {
   );
 }
 
-
-
-
 class Simplesuggester extends React.Component {
 
   constructor() {
@@ -38,7 +23,7 @@ class Simplesuggester extends React.Component {
 
     this.state = {
       value: '',
-      suggestions: []//getSuggestions('') TODO
+      suggestions: []
     };
 
     this.onChange = this.onChange.bind(this);
@@ -56,7 +41,6 @@ class Simplesuggester extends React.Component {
       value: newValue
     });
   }
-
 
 
 
@@ -82,18 +66,51 @@ class Simplesuggester extends React.Component {
 }
 
 
+
+
+
+var copyAttributes = function (element) {
+	var properties = {}; 
+	var attributes = element.attributes;
+
+	/* Copy each attribute */
+	for (var i = 0; i < attributes.length; i++){
+		properties[attributes[i].name] = attributes[i].value;
+	}
+
+	
+	var style_obj = {}; // The style property is empty by default
+
+	/* Convert the style attribute into an object 
+	 * @warn: somehow the module react-autosuggest consider only the first
+	 *	  style property. In general is better to use stylesheets.
+	*/
+
+	/*
+	var style_chunks = attributes["style"].value.split(';');
+	style_chunks.forEach(function(property) {
+    		var tup = property.split(':');
+    		style_obj[tup[0]] = tup[1];
+		console.log(style_obj);
+	});
+	*/
+
+	properties["style"] = style_obj;
+
+	return properties;
+}
+
+
+
 /* Get all the elements whose class is autosuggest */
 var elements_list = document.getElementsByClassName('autosuggest-input');
 
 /* Render the list of elements */
 for (var i = 0; i < elements_list.length; i++){
 	
-	/* Collect all the attributes */
-	var props = {}; var attributes = elements_list[i].attributes;
-	for (var j = 0; j < attributes.length; j++){
-		props[attributes[j].name] = attributes[j].value;
-	}
+	/* Copy all the attributes */
+	var properties = copyAttributes(elements_list[i]);
 
 	/* Render passing the attributes */
-	ReactDOM.render( <Simplesuggester inputProps={props}/>, elements_list[i]);
+	ReactDOM.render( <Simplesuggester inputProps={properties} />, elements_list[i]);
 }

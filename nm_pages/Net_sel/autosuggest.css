@@ -15,14 +15,21 @@
 
 .react-autosuggest__input:focus {
   outline: none;
-  border-radius: 0px;
+}
+
+
+
+
+.react-autosuggest__container--open .react-autosuggest__input {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 .react-autosuggest__suggestions-container {
   position: absolute;
   width: 100%; /* This will align it with the parent */
-  margin: 0;
   margin-left: 0 !important;
+  margin: 0;
   padding: 0 0;
   list-style-type: none;
   border: 1px solid #aaa;
@@ -37,10 +44,8 @@
 
 .react-autosuggest__suggestion {
   cursor: pointer;
-}
-
-ul {
-  margin-left: 0;
+  list-style: none !important;
+  margin-left: 0px !important;
 }
 
 .react-autosuggest__suggestion--focused {

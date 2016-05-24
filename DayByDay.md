@@ -70,6 +70,21 @@
 	- Use a named div and a function named getSuggestion_name (where name is the name of the div)
 	- All the properties are passed from the div
 
+#### Day 5
+- Is there a sql vulnerability when checking the auth token on nm ? (note that postgres comments are not escaped)
+- The function to get the cidr is ready...I fially choose to use one only async call when the page is loaded
+	- It's much faster and smooth
+	- Every time a network is added the page is likely to be reloaded
+- Put the app togheter with the UI
+- Dealing with the "I cannot send your cookies to another domain" problem
+
+#### Day 6
+- Dealing with the "I cannot send your cookies to your parent directory" problem
+	- After half hour playing with nginx location/root/alias directives I just choosed the set the
+	  session cookie manually on the root :D
+- Using the same database with both the old and the newer (under dev) versions of netmagis
+
+
 
 
 
