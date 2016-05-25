@@ -83,6 +83,11 @@
 	- After half hour playing with nginx location/root/alias directives I just choosed the set the
 	  session cookie manually on the root :D
 - Using the same database with both the old and the newer (under dev) versions of netmagis
+- The austosuggest component works well togheter with async ajax requestes
+
+#### Day 7
+- Starting to work on the 'add' interface
+
 
 
 

@@ -2,7 +2,7 @@ const webpack = require('webpack');
 
 module.exports = {
     entry: {
-	test: './src/test.jsx',
+	'input-autosuggest': './src/input-autosuggest.jsx',
     },
     output: {
         path: 'dist/',
