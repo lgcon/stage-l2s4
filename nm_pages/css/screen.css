@@ -314,7 +314,7 @@ dt.menu-meteo a img {
 #texte-page a:active,
 #texte-page a:visited {
         color: #00536c;			/* bleu foncé */
-        text-decoration: underline;
+/*      text-decoration: underline; */
 }
 #texte-page a:hover {
 	color: #cc5229;			/* orange */
@@ -326,7 +326,7 @@ dt.menu-meteo a img {
 	margin-left: 15px;
         padding-bottom: 3px; 
         display: list-item ; 
-	list-style: disc outside url(images/puce2.gif);
+/*	list-style: disc outside url(images/puce2.gif); */
 }
 
 #texte-page ul {
@@ -339,7 +339,7 @@ dt.menu-meteo a img {
         display: list-item;
 	margin-left: 0px;
         padding-left: 0px;
-	list-style: circle outside url(images/puce3.gif);
+/*	list-style: circle outside url(images/puce3.gif); */
 }
 
 #texte-page li ul li ul li {
@@ -347,7 +347,7 @@ dt.menu-meteo a img {
 	margin-left: 0px;
         padding-left: 0px;
         display: list-item;
-	list-style: square outside url(images/puce4.gif);
+/*	list-style: square outside url(images/puce4.gif); */
 }
 
 .separation-milieu {

@@ -87,6 +87,7 @@
 
 #### Day 7
 - Starting to work on the 'add' interface
+- Created the Tabs component 
 
 
 
