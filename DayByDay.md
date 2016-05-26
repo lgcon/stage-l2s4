@@ -89,6 +89,9 @@
 - Starting to work on the 'add' interface
 - Created the Tabs component 
 
+#### Day 8
+- Internationalization
+
 
 
 

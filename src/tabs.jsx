@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {Add_host} from './add_forms.jsx';
 
 
 var Tabs = React.createClass({
@@ -76,13 +77,12 @@ var Pane = React.createClass({
 
 
 
-
 var App = React.createClass({
 	render: function () {
 		return ( 
 				<Tabs >
 					<Pane label="Tab 1" >
-						<div> This is my tab 1 contents! </div> 
+						<Add_host />
 					</Pane> 
 					<Pane label="Tab 2" >
 						<div> This is my tab 2 contents! </div> 
