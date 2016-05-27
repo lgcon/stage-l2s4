@@ -1,7 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+
 export var Add_host = React.createClass({
+
+	getInitialState: function(){
+		return {lang: translations};
+	},
+
+	render: function(){	
+		console.log("render");
+		return (
+			<form>
+			  <p>{translate("First name")+":"}</p>
+			  <input type="text" name="firstname"></input>
+			  <p>Last name:</p>
+			  <input type="text" name="lastname"></input>
+			</form>
+		);
+	}
+});
+
+export var Add_host_old = React.createClass({
 	
 	render: function(){
 		return (
@@ -91,7 +111,6 @@ export var Add_host = React.createClass({
 		);
 	}
 });
-
 
 
 
