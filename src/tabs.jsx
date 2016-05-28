@@ -1,9 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Add_host} from './add_forms.jsx';
+import {Translator, translate} from './lang.jsx';
 
 
 var Tabs = React.createClass({
+
+ 	contextTypes : {lang: React.PropTypes.string},
 
 	/* The first tab is the one active by default */
 	getInitialState: function () {
@@ -25,7 +28,7 @@ var Tabs = React.createClass({
 			return ( 
 				<li key = {index} className = {activeClass} >
 					<a href = "#" onClick = {this.handleClick.bind(this, index)} > 
-						{child.props.label} 
+						{translate(child.props.label)} 
 					</a> 
 				</li>
 			);
@@ -68,6 +71,8 @@ var Tabs = React.createClass({
 
 /* Just render the children */
 var Pane = React.createClass({
+ 	contextTypes : {lang: React.PropTypes.string},
+
 	render: function () {
 		return ( 
 			<div> {this.props.children} </div>
@@ -78,6 +83,9 @@ var Pane = React.createClass({
 
 
 var App = React.createClass({
+
+ 	contextTypes : {lang: React.PropTypes.string},
+
 	render: function () {
 		return ( 
 				<Tabs >
@@ -95,4 +103,4 @@ var App = React.createClass({
 	}
 });
 
-ReactDOM.render( <App /> , document.getElementById('app'));
+ReactDOM.render( <Translator> <App /> </Translator>, document.getElementById('app'));

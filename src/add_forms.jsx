@@ -1,15 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {translate} from './lang.jsx';
 
 
 export var Add_host = React.createClass({
 
-	getInitialState: function(){
-		return {lang: translations};
-	},
+ 	contextTypes : {lang: React.PropTypes.string},
 
 	render: function(){	
-		console.log("render");
 		return (
 			<form>
 			  <p>{translate("First name")+":"}</p>

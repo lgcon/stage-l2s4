@@ -3,8 +3,7 @@ const webpack = require('webpack');
 module.exports = {
     entry: {
 	'input-autosuggest': './src/input-autosuggest.jsx',
-	'tabs': './src/tabs.jsx',
-	'msg': './src/msg.jsx'
+	'tabs': './src/tabs.jsx'
     },
     output: {
         path: 'dist/',
