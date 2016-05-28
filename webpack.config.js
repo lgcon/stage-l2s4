@@ -2,7 +2,6 @@ const webpack = require('webpack');
 
 module.exports = {
     entry: {
-	'input-autosuggest': './src/input-autosuggest.jsx',
 	'tabs': './src/tabs.jsx'
     },
     output: {

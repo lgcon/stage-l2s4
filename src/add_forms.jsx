@@ -3,6 +3,25 @@ import ReactDOM from 'react-dom';
 import {translate} from './lang.jsx';
 
 
+var Asd = React.createClass({
+
+ bkp : 'Hello!',
+
+ getInitialState: function() {
+	console.log("creating");
+    return {value: this.bkp};
+  },
+  handleChange: function(event) {
+    this.bkp = event.target.value;
+    this.setState({value: event.target.value});
+  },
+  render: function() {
+    return (
+      <input type="text" value={this.state.value} onChange={this.handleChange}></input>
+    );
+  }
+});
+
 export var Add_host = React.createClass({
 
  	contextTypes : {lang: React.PropTypes.string},
@@ -14,6 +33,8 @@ export var Add_host = React.createClass({
 			  <input type="text" name="firstname"></input>
 			  <p>Last name:</p>
 			  <input type="text" name="lastname"></input>
+			  <p>Asd:</p>
+			  <Asd />
 			</form>
 		);
 	}
