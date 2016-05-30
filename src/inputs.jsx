@@ -91,13 +91,29 @@ var Prompters = {
 		getValues: function (){
 			return this.machines;
 		}
+	},
+
+
+	/*************************  Handler name="domain" ***********************/
+		
+	domain: {
+		domains: [],
+
+		/* Fill the machines array with the API answer */
+		init : function (callback)  { 
+			getJSON(apiURL+'/domains', function(response){
+					this.domains= response;
+					
+			}.bind(this), callback);
+		},
+
+		/* Gives all the machines */
+		getValues: function (){
+			return this.domains;
+		}
 	}
 
-
-	/*************************  Handler name="...." ***********************/
-		
 }
-
 
 
 
@@ -230,7 +246,9 @@ export var AJXdropdown = React.createClass({
 		
 		var values = Prompters[this.props.name].getValues();
 
-		function makeElement(val) { return (<el> {val} </el>); }
+		function makeElement(val, index) { 
+			return (<el key={"ajd"+index} > {val} </el>); 
+		}
 		
 		return (
 			<Dropdown_internal {...this.props}  >
