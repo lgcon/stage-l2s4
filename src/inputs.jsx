@@ -233,7 +233,7 @@ export var AJXdropdown = React.createClass({
 		function makeElement(val) { return (<el> {val} </el>); }
 		
 		return (
-			<Dropdown_internal asd="ciao"  >
+			<Dropdown_internal {...this.props}  >
 				{values.map(makeElement)}
 			</ Dropdown_internal>
 		);

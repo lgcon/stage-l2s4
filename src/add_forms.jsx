@@ -12,10 +12,7 @@ export var Add_host = React.createClass({
 		return (
 			<F.Form id="Add_host">
 				<F.Row>
-					<F.Inputdrop label="Name" >
-						<el>.example.org</el>
-						<el>.example.com</el>
-					</F.Inputdrop>
+					<F.InputAdrop label="Name" ddname="machines" />
 					<F.Input label="TTL" dims="2+1"/>
 				</F.Row>
 				<F.Row>

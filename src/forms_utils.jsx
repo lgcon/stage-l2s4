@@ -207,6 +207,37 @@ export var Inputdrop = React.createClass({
 
 });
 
+export var InputAdrop = React.createClass({
+
+ 	contextTypes : {lang: React.PropTypes.string},
+
+	render: function(){
+
+		var grid_vals = this.props.dims ? 
+			this.props.dims.split('+') : ['2','3'];
+
+		/* Make a copy of the props without the children */
+		var props = {};
+		$.extend(props,this.props);
+		props.children = null;
+
+		return (
+			<div>
+				<label className={"control-label col-md-"+grid_vals[0]}>
+				{translate(this.props.label)}
+				</label>
+				<div className={"input-group col-md-"+grid_vals[1]}
+				     style={{"paddingLeft": "15px", "float": "left"}} >
+					<input className="form-control" {...props} />
+					<AJXdropdown name={this.props.ddname} 
+					  superClass="input-group-btn" />
+				</div>
+			</div>
+		);
+	}
+
+});
+
 /* Props side=[right|left] */
 export var Checkbox = React.createClass({
 	
