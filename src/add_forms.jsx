@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {translate} from './lang.jsx';
+import {getJSON} from './inputs.jsx';
 import * as F from './forms_utils.jsx';
 
 
@@ -49,8 +49,71 @@ export var Add_host = React.createClass({
 	}
 });
 
+var Select_block = React.createClass({
 
-ReactDOM.render(<Add_host />, document.getElementById('app'));
+ 	contextTypes : {lang: React.PropTypes.string},
+
+	getInitialState: function(){
+		return { blocks: undefined};
+	},
+
+	handleSearch: function(){
+			/* XXX this is just an example */
+			var els = document.getElementById('Search block').elements;
+			var query = "http://localhost/stage-l2s4/nm_pages/api/addrblock?net="+els[0].textContent+"&nb="+els[1].value;	
+
+			console.log("Simulating a query: "+query);
+
+			getJSON(query,function(res){this.setState({ blocks: res });}.bind(this));
+	},
+
+	search_form: function(){
+		return (
+			<F.Row>
+				<F.Adropdown label="Network" name="cidr" dims="2+1" />
+				<F.Input label="Address count" dims="1+1"/>
+				<F.Space dims="1" />
+				<F.Button dims="1" onClick={this.handleSearch}  >
+					Search
+				</F.Button>
+			</F.Row>
+		);
+	},
+
+	select_form: function(){
+	
+		if (!this.state.blocks) return null;
+
+		function makeEl({first, size}){
+			return (<el> {first+" (size: "+size+")"} </el>);
+		}
+		
+		return (
+			<F.Row>
+				<F.Dropdown label="Block" name="cidr">
+					{this.state.blocks.map(makeEl)}
+				</F.Dropdown>
+				<F.Space dims="1" />
+				<F.Button dims="1" >
+					Select
+				</F.Button>
+			</F.Row>
+		);
+			
+
+	},
+
+	render: function(){
+		return ( 
+			<F.Form id='Search block'>
+				{this.search_form()}
+				{this.select_form()}
+			</F.Form>
+		);
+	}
+});
+
+ReactDOM.render(<Select_block />, document.getElementById('app'));
 
 
 

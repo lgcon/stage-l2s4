@@ -11,7 +11,7 @@ var apiURL = 'http://localhost/stage-l2s4/nm_pages/api';
 
 /* XXX same as $.getJSON but defines mimeType
    usefull in case of static files */
-var getJSON = function(url, success, callback){
+export var getJSON = function(url, success, callback){
 	$.ajax({
 		url: url,
 		dataType: 'json',
@@ -71,6 +71,10 @@ var Prompters = {
 			return this.networks.filter(function (network) {
 		    		return network.toLowerCase().slice(0, inputLength) === inputValue;
 		  	});
+		},
+
+		getValues: function (){
+			return this.networks;
 		}
 	},
 
