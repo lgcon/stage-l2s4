@@ -205,6 +205,20 @@ export var F_checkbox = React.createClass({
 });
 
 
+export var F_space = React.createClass({
+
+
+	render: function(){
+		var grid_val = this.props.dims ? 
+			this.props.dims : '2';
+
+		return (
+			<div className={"col-md-"+grid_val} />
+		);
+	}
+
+});
+
 export var F_fgroup = React.createClass({
 
  	contextTypes : {lang: React.PropTypes.string},
