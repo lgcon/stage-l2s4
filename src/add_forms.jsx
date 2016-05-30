@@ -18,10 +18,10 @@ export var Add_host = React.createClass({
 						<el>example.org</el>
 						<el>example.com</el>
 					</F_inputdr>
+					<F_input label="TTL"/>
 				</F_fgroup>
 				<F_fgroup>
 					<F_ainput label="Ip address" name="cidr" />
-					<F_input label="TTL"/>
 				</F_fgroup>
 				<F_fgroup>
 					<F_input label="Mac address"/>
