@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {translate} from './lang.jsx';
-import {AutoInput} from './inputs.jsx';
+import {AutoInput, AJXdropdown} from './inputs.jsx';
 
 
 /* Props: label, dimension="2+3"*/
 /* note: value =/= defaultvalue */
-export var F_input = React.createClass({
+export var Input = React.createClass({
 	
  	contextTypes : {lang: React.PropTypes.string},
 	
@@ -29,7 +29,7 @@ export var F_input = React.createClass({
 
 });
 
-export var F_ainput = React.createClass({
+export var Ainput = React.createClass({
 	
  	contextTypes : {lang: React.PropTypes.string},
 	
@@ -54,7 +54,7 @@ export var F_ainput = React.createClass({
 
 
 /* @prec a button can have only text as a child */
-export var F_button = React.createClass({
+export var Button = React.createClass({
 	
  	contextTypes : {lang: React.PropTypes.string},
 	
@@ -76,7 +76,7 @@ export var F_button = React.createClass({
 
 
 /* @prec a button can have only wrapped text as a child */
-var Dropdown = React.createClass({
+export var Dropdown_internal = React.createClass({
 
 	getInitialState: function(){
 		return { selected: this.props.selected || 0 };
@@ -101,8 +101,12 @@ var Dropdown = React.createClass({
 
 
 	render: function(){
-		
-		var value = this.props.children[this.state.selected].props.children;
+
+		var value = "";
+
+		if (this.props.children.length != 0){
+			value = this.props.children[this.state.selected].props.children;
+		}
 
 		return (
 			<div className={this.props.superClass}>
@@ -123,7 +127,7 @@ var Dropdown = React.createClass({
 
 /* @prec a button can have only wrapped text as a child */
 /* TODO add label */
-export var F_dropdown = React.createClass({
+export var Dropdown = React.createClass({
 
  	contextTypes : {lang: React.PropTypes.string},
 
@@ -138,14 +142,39 @@ export var F_dropdown = React.createClass({
 				{translate(this.props.label)}
 				</label>
 				<div className={"dropdown col-md-"+grid_vals[1]}>
-					<Dropdown {...this.props} />
+					<Dropdown_internal {...this.props} />
 				</div>
 			</div>
 		);
 	}
 });
 
-export var F_inputdr = React.createClass({
+
+
+export var Adropdown = React.createClass({
+
+ 	contextTypes : {lang: React.PropTypes.string},
+
+	render: function(){
+
+		var grid_vals = this.props.dims ? 
+			this.props.dims.split('+') : ['2','3'];
+
+		return (
+			<div>
+				<label className={"control-label col-md-"+grid_vals[0]}>
+				{translate(this.props.label)}
+				</label>
+				<div className={"dropdown col-md-"+grid_vals[1]}>
+					<AJXdropdown {...this.props} />
+				</div>
+			</div>
+		);
+	}
+});
+
+
+export var Inputdrop = React.createClass({
 
  	contextTypes : {lang: React.PropTypes.string},
 
@@ -165,12 +194,12 @@ export var F_inputdr = React.createClass({
 				{translate(this.props.label)}
 				</label>
 				<div className={"input-group col-md-"+grid_vals[1]}
-				     style={{"padding-left": "15px", "float": "left"}} >
+				     style={{"paddingLeft": "15px", "float": "left"}} >
 					<input className="form-control" {...props} />
-					<Dropdown name={this.props.ddname} 
+					<Dropdown_internal name={this.props.ddname} 
 					 superClass="input-group-btn" >
 						{this.props.children}
-					</Dropdown>
+					</Dropdown_internal>
 				</div>
 			</div>
 		);
@@ -179,7 +208,7 @@ export var F_inputdr = React.createClass({
 });
 
 /* Props side=[right|left] */
-export var F_checkbox = React.createClass({
+export var Checkbox = React.createClass({
 	
  	contextTypes : {lang: React.PropTypes.string},
 
@@ -205,7 +234,7 @@ export var F_checkbox = React.createClass({
 });
 
 
-export var F_space = React.createClass({
+export var Space = React.createClass({
 
 
 	render: function(){
@@ -219,7 +248,7 @@ export var F_space = React.createClass({
 
 });
 
-export var F_fgroup = React.createClass({
+export var Row = React.createClass({
 
  	contextTypes : {lang: React.PropTypes.string},
 
@@ -236,7 +265,7 @@ export var F_fgroup = React.createClass({
 
 
 
-export var F_form = React.createClass({
+export var Form = React.createClass({
 	
  	contextTypes : {lang: React.PropTypes.string},
 

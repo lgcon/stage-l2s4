@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Autosuggest from 'react-autosuggest';
+import {Dropdown_internal} from './forms_utils.jsx';
 
 
 
@@ -10,12 +11,13 @@ var apiURL = 'http://localhost/stage-l2s4/nm_pages/api';
 
 /* XXX same as $.getJSON but defines mimeType
    usefull in case of static files */
-var getJSON = function(url, fun ){
+var getJSON = function(url, success, callback){
 	$.ajax({
 		url: url,
 		dataType: 'json',
 		mimeType: 'application/json',
-		success:  fun
+		success:  success,
+		complete: callback
 	});
 }
 		
@@ -31,12 +33,14 @@ var getJSON = function(url, fun ){
  * 
  * - Every handler must/can (see required/optional) contain the 
  *   following stuffs:
- *	- A function `init()` (optional):
- *		this function will be called once when the AutoInput
+ *	- A function `init(callback)` (optional):
+ *		this function will be called once when the element
  *		is about to be mounted.
- *	- A function `getSuggestions(value)` (required):
+ *	- A function `getSuggestions(value,callback)` (required if input):
  *		this function take the actual value of the input and 
  *		must return an array of suggestions
+ * 	- A function `getValues()` (required if dropdown):
+ *		same as getSuggestions but used for the dropdown
  */
 
 var Prompters = {
@@ -47,18 +51,18 @@ var Prompters = {
 		networks: [],
 
 		/* Fill the networks array with the API answer */
-		init : function ()  { 
+		init : function (callback)  { 
 			getJSON(apiURL+'/networks', function(response){
 				for (var i = 0; i < response.length; i++){
 					this.networks.push(response[i]["addr4"]);
 					this.networks.push(response[i]["addr6"]);
 				}
-			}.bind(this));
+			}.bind(this), callback);
 		},
 
 		/* Case-insensitive suggestions based on the 
 		   beginning of the addresses*/
-		getSuggestions: function (value){
+		getSuggestions: function (value, callback){
 			var inputValue = value.trim().toLowerCase();
 			var inputLength = inputValue.length;
 
@@ -68,7 +72,27 @@ var Prompters = {
 		    		return network.toLowerCase().slice(0, inputLength) === inputValue;
 		  	});
 		}
+	},
+
+	/*************************  Handler name="machine" ***********************/
+
+	machines: {
+		machines: [],
+
+		/* Fill the machines array with the API answer */
+		init : function (callback)  { 
+			getJSON(apiURL+'/machines', function(response){
+					this.machines = response;
+					
+			}.bind(this), callback);
+		},
+
+		/* Gives all the machines */
+		getValues: function (){
+			return this.machines;
+		}
 	}
+
 
 	/*************************  Handler name="...." ***********************/
 		
@@ -174,4 +198,46 @@ export var AutoInput = React.createClass({
 			/>
 		);
 	}
+});
+
+
+
+
+
+
+
+export var AJXdropdown = React.createClass({
+	
+        contextTypes : {lang: React.PropTypes.string},
+
+
+	/* An AJXdropdown have a name prop */
+	propTypes: { name: React.PropTypes.string.isRequired },	
+
+	componentWillMount: function () {
+		var prompter = Prompters[this.props.name];
+
+		if (!prompter) {
+			console.error(this.props.name+" is not a prompter!");
+
+		} else if (prompter.init) {
+			prompter.init(function(){this.forceUpdate();}.bind(this));
+			
+		}
+	},
+
+	render: function(){
+		
+		var values = Prompters[this.props.name].getValues();
+
+		function makeElement(val) { return (<el> {val} </el>); }
+		
+		return (
+			<Dropdown_internal asd="ciao"  >
+				{values.map(makeElement)}
+			</ Dropdown_internal>
+		);
+	}
+
+
 });

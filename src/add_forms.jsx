@@ -1,9 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {translate} from './lang.jsx';
-import {F_input, F_ainput, F_checkbox,
-	 F_fgroup, F_form, F_button,
-	F_dropdown, F_inputdr, F_space} from './forms_utils.jsx';
+import * as F from './forms_utils.jsx';
 
 
 export var Add_host = React.createClass({
@@ -12,47 +10,44 @@ export var Add_host = React.createClass({
 
 	render: function(){
 		return (
-			<F_form id="Add_host">
-				<F_fgroup>
-					<F_inputdr label="Name" >
-						<el>example.org</el>
-						<el>example.com</el>
-					</F_inputdr>
-					<F_input label="TTL"/>
-				</F_fgroup>
-				<F_fgroup>
-					<F_ainput label="Ip address" name="cidr" />
-					<F_dropdown label="View">
+			<F.Form id="Add_host">
+				<F.Row>
+					<F.Inputdrop label="Name" >
+						<el>.example.org</el>
+						<el>.example.com</el>
+					</F.Inputdrop>
+					<F.Input label="TTL" dims="2+1"/>
+				</F.Row>
+				<F.Row>
+					<F.Ainput label="Ip address" name="cidr" />
+					<F.Dropdown label="View">
 						<el>external</el>
 						<el>internal</el>
-					</F_dropdown>
-				</F_fgroup>
-				<F_fgroup>
-					<F_input label="Mac address"/>
-					<F_space dims="2" />
-					<F_checkbox label="use SMTP" />
-				</F_fgroup>
-				<F_fgroup>
-					<F_dropdown label="Host">
-						<el>PC/Windows</el>
-						<el>PC/Unix</el>
-					</F_dropdown>
-				</F_fgroup>
-				<F_fgroup>
-					<F_input label="Comment"/>
-				</F_fgroup>
-				<F_fgroup>
-					<F_input label="Resp. name"/>
-					<F_input label="Resp. mail"/>
-				</F_fgroup>
-				<F_fgroup>
-					<F_space dims="5" />
-					<F_button dims="1" type="submit" >
+					</F.Dropdown>
+				</F.Row>
+				<F.Row>
+					<F.Input label="Mac address"/>
+					<F.Space dims="2" />
+					<F.Checkbox label="use SMTP" />
+				</F.Row>
+				<F.Row>
+					<F.Adropdown label="Machine" name="machines" />
+				</F.Row>
+				<F.Row>
+					<F.Input label="Comment"/>
+				</F.Row>
+				<F.Row>
+					<F.Input label="Resp. name"/>
+					<F.Input label="Resp. mail"/>
+				</F.Row>
+				<F.Row>
+					<F.Space dims="5" />
+					<F.Button dims="1" type="submit" >
 						Add
-					</F_button>
-				</F_fgroup>
+					</F.Button>
+				</F.Row>
 					
-			</F_form>
+			</F.Form>
 		);
 	}
 });
