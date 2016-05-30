@@ -256,7 +256,7 @@ export var Checkbox = React.createClass({
 			<div className={"checkbox col-md-"+grid_val}>
 				<label>
 					{side === 'left' ? label : null}
-					<input type="checkbox" /> 
+					<input type="checkbox" {...this.props} /> 
 					{side === 'right' ? label : null}
 				</label>
   			</div>
