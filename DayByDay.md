@@ -126,6 +126,7 @@
 - Writing a bit of documentation
 - Making tabs always keep the values of not-rendered panels
 - Simplesuggester has been generalized in the component AutoInput
+- Writing a small and easy2use bootstrap-react lib
 	   
 
 

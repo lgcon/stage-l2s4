@@ -70,7 +70,7 @@ export var Tabs = React.createClass({
 			var activeClass = this.state.selected === index ? 'active' : '' ;
 			
 			return ( 
-				<li key={"lab"+index} className={activeClass}>
+				<li key={"tlab"+index} className={activeClass}>
 					<a href = "#" onClick={this.handleClick.bind(this,index)}> 
 						{translate(child.props.label)} 
 					</a> 
@@ -93,7 +93,7 @@ export var Tabs = React.createClass({
 		function contents(child, index) {
 			var show = (index == this.state.selected)? '' : 'none';
 			return 	(
-				<div key={"con"+index} style={{display: show}}> 
+				<div key={"tcon"+index} style={{display: show}}> 
 					{this.props.children[index]} 
 				</div>
 			);

@@ -2,8 +2,7 @@ const webpack = require('webpack');
 
 module.exports = {
     entry: {
-	'tabs': './src/tabs.jsx',
-	'inputs': './src/inputs.jsx'
+	'add_forms': './src/add_forms.jsx'
     },
     output: {
         path: 'dist/',

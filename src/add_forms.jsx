@@ -1,115 +1,62 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {translate} from './lang.jsx';
-
+import {F_input, F_ainput, F_checkbox,
+	 F_fgroup, F_form, F_button,
+	F_dropdown, F_inputdr} from './forms_utils.jsx';
 
 
 export var Add_host = React.createClass({
 
  	contextTypes : {lang: React.PropTypes.string},
 
-	render: function(){	
+	render: function(){
 		return (
-			<form>
-			  <p>{translate("First name")+":"}</p>
-			  <input type="text" name="firstname"></input>
-			  <p>Last name:</p>
-			  <input type="text" name="lastname"></input>
-			</form>
+			<F_form id="Add_host">
+				<F_fgroup>
+					<F_inputdr label="Name" >
+						<el>example.org</el>
+						<el>example.com</el>
+					</F_inputdr>
+				</F_fgroup>
+				<F_fgroup>
+					<F_ainput label="Ip address" name="cidr" />
+					<F_input label="TTL"/>
+				</F_fgroup>
+				<F_fgroup>
+					<F_input label="Mac address"/>
+					<F_dropdown label="View">
+						<el>external</el>
+						<el>internal</el>
+					</F_dropdown>
+				</F_fgroup>
+				<F_fgroup>
+					<F_dropdown label="Host">
+						<el>PC/Windows</el>
+						<el>PC/Unix</el>
+					</F_dropdown>
+					<F_checkbox label="use SMTP" />
+				</F_fgroup>
+				<F_fgroup>
+					<F_input label="Comment"/>
+				</F_fgroup>
+				<F_fgroup>
+					<F_input label="Resp. name"/>
+					<F_input label="Resp. mail"/>
+				</F_fgroup>
+				<F_fgroup>
+					<F_button type="submit" >
+						Add
+					</F_button>
+				</F_fgroup>
+					
+			</F_form>
 		);
 	}
 });
 
-export var Add_host_old = React.createClass({
-	
-	render: function(){
-		return (
-			<table>
-			<tbody>
-				<tr>
-					<td align="LEFT">{translate('Name')}</td>
-					<td align="LEFT">
-						<input name="name" size="30" type="TEXT">
-						</input>
-						.
-						<select size="1" name="domain">
-							<option value="example.com">example.com</option>
-							<option value="example.org">example.org</option>
-						</select>
-					</td>
-					<td align="RIGHT">TTL</td>
-					<td align="LEFT"><input name="ttl" size="6" maxlength="10" type="text"></input> (in seconds)</td>
-				</tr>
-				<tr>
-					<td align="LEFT">IP address</td>
-					<td align="LEFT">
-						<input name="addr" size="45" value="" type="TEXT">
-						</input>
-					</td>
-					<td align="RIGHT">View</td>
-					<td align="LEFT">
-						<select size="1" name="idview">
-							<option value="3">external</option>
-							<option value="2">internal</option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td align="LEFT">MAC address</td>
-					<td align="LEFT">
-						<input name="mac" size="20" maxlength="17" type="TEXT">
-						</input>
-					</td>
-					<td align="RIGHT"></td>
-					<td align="LEFT"><input name="iddhcpprof" value="0" type="HIDDEN"></input></td>
-				</tr>
-				<tr>
-					<td align="LEFT">Host type</td>
-					<td align="LEFT">
-						<select size="1" name="hinfo">
-							<option value="PC/Windows" >PC/Windows</option>
-							<option value="PC/Unix">PC/Unix</option>
-							<option value="Macintosh/MacOS">Macintosh/MacOS</option>
-							<option value="Other/Unix">Other/Unix</option>
-							<option value="Printer">Printer</option>
-							<option value="Network equipment">Network equipment</option>
-						</select>
-					</td>
-					<td align="RIGHT">Use SMTP</td>
-					<td align="LEFT"><input name="sendsmtp" value="1" type="CHECKBOX"></input></td>
-				</tr>
-				<tr>
-					<td align="LEFT">Comment</td>
-					<td colspan="3" align="LEFT">
-						<input name="comment" size="50" type="TEXT">
-						</input>
-					</td>
-				</tr>
-				<tr>
-					<td align="LEFT">Responsible (name)</td>
-					<td colspan="3" align="LEFT">
-						<input name="respname" size="50" type="TEXT">
-						</input>
-					</td>
-				</tr>
-				<tr>
-					<td align="LEFT">Responsible (mail)</td>
-					<td colspan="3" align="LEFT">
-						<input name="respmail" size="50" type="TEXT">
-						</input>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="4" align="CENTER">
-						<input value="Add" type="SUBMIT">
-						</input>
-					</td>
-				</tr>
-			</tbody>		
-			</table>
-		);
-	}
-});
+
+ReactDOM.render(<Add_host />, document.getElementById('app'));
 
 
 
