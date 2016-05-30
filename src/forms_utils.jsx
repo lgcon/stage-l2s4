@@ -164,7 +164,8 @@ export var F_inputdr = React.createClass({
 				<label className={"control-label col-md-"+grid_vals[0]}>
 				{translate(this.props.label)}
 				</label>
-				<div className={"input-group col-md-"+grid_vals[1]}>
+				<div className={"input-group col-md-"+grid_vals[1]}
+				     style={{"padding-left": "15px"}} >
 					<input className="form-control" {...props} />
 					<Dropdown name={this.props.ddname} 
 					 superClass="input-group-btn" >
