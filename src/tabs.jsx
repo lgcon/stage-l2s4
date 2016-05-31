@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Add_host} from './add_forms.jsx';
-import {Translator, translate} from './lang.jsx';
+import {Add_host, Add_block} from './add_forms.jsx';
+import {Translator, translate, updateTranslations} from './lang.jsx';
 
 
 
@@ -144,16 +144,31 @@ var App = React.createClass({
 
  	contextTypes : {lang: React.PropTypes.string},
 
+	componentWillMount: function(){
+		var el = $("#langButton")[0];
+		el.onclick = function(){ 
+
+			var html = document.documentElement;
+
+			if (html.lang == "fr" )
+				html.lang = "en";
+			else 
+				html.lang = "fr";
+
+			updateTranslations();
+		}
+	},
+
 	render: function () {
 		return ( 
 				<Tabs >
-					<Pane label="Tab 1" >
-						<Add_host />
+					<Pane label="Add single host" >
+						<Add_host id="asdasd" />
 					</Pane> 
-					<Pane label="Tab 2" >
-						<div> This is my tab 2 contents! </div> 
+					<Pane label="Add address block" >
+						<Add_block />
 					</Pane> 
-					<Pane label="Tab 3" >
+					<Pane label="Others..." >
 						<div> This is my tab 3 contents! </div> 
 					</Pane> 
 				</Tabs> 

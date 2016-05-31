@@ -2,6 +2,10 @@
 	"Name" : "Nom",
 	"First name": "Prenom",
 	"Last name": "Nom",
-	"IP address" : "Adresse IP"
+	"Ip address" : "Adresse Ip",
+	"Add single host" : "Adjouter un host",
+	"Add block" : "Adjouter un block",
+	"View" : "Vue",
+	"Mac address": "Adresse Mac"
 }
 

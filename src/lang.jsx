@@ -62,9 +62,8 @@ export var updateTranslations = function() {
 			/* Get json file at the given url */
 			dataType: 'json',
 			// XXX this is not a rapresentative url
-			url:'http://localhost/stage-l2s4/nm_pages/lang/'+Dict.lang+'.json',
+			url:'http://130.79.91.54/stage-l2s4/nm_pages/lang/'+Dict.lang+'.json',
 			
-		
 			/* In case of success update translations */
 	    		success: function(response, status, xhr){ 
 					Dict.translations = response;
@@ -130,6 +129,9 @@ export var Translator = React.createClass({
  *         if the dictionary is still loading.
  */
 export var translate = function (text) {
+
+		if (!text) return text;
+
 		/* If loading just put spaces */
 		if (Dict.loading) return "\xa0".repeat(text.length);
 

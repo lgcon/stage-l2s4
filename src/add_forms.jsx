@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import {getJSON} from './inputs.jsx';
 import * as F from './forms_utils.jsx';
 
@@ -115,7 +114,7 @@ var Select_block = React.createClass({
 		event.preventDefault();
 		/* XXX this is just an example */
 		var els = document.getElementById('Search block').elements;
-		var query = "http://localhost/stage-l2s4/nm_pages/api/addrblock";//+els[0].textContent+"&nb="+els[1].value;	
+		var query = "http://130.79.91.54/stage-l2s4/nm_pages/api/addrblock";//+els[0].textContent+"&nb="+els[1].value;	
 
 		getJSON(query,function(res){this.setState({ blocks: res });}.bind(this));
 	},
@@ -236,8 +235,5 @@ export var Add_block = React.createClass({
 		}
 	}
 });
-
-ReactDOM.render(<Add_block />, document.getElementById('app'));
-
 
 

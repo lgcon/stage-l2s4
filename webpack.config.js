@@ -2,7 +2,7 @@ const webpack = require('webpack');
 
 module.exports = {
     entry: {
-	'add_forms': './src/add_forms.jsx'
+	'tabs': './src/tabs.jsx'
     },
     output: {
         path: 'dist/',

@@ -6,7 +6,7 @@ import {Dropdown_internal} from './forms_utils.jsx';
 
 
 /* XXX this is a temporary url to the api */
-var apiURL = 'http://localhost/stage-l2s4/nm_pages/api';
+var apiURL = 'http://130.79.91.54/stage-l2s4/nm_pages/api';
 
 
 /* XXX same as $.getJSON but defines mimeType
@@ -52,6 +52,8 @@ var Prompters = {
 
 		/* Fill the networks array with the API answer */
 		init : function (callback)  { 
+			console.log("init");
+			console.log(this.networks);
 			getJSON(apiURL+'/networks', function(response){
 				for (var i = 0; i < response.length; i++){
 					this.networks.push(response[i]["addr4"]);
