@@ -93,7 +93,9 @@ export var Dropdown_internal = React.createClass({
 	},
 
 	componentWillUpdate: function(newprops) {
-		if (!this.state.value && newprops.children.length > 0)
+	
+		if ( (!this.state.value || this.props != newprops) 
+		      &&  newprops.children.length > 0) // See async and FilteredDd
 			this.setState({value: newprops.children[0].props.children});
 	},
 

@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Autosuggest from 'react-autosuggest';
 import {Dropdown_internal} from './forms_utils.jsx';
+import {translate} from './lang.jsx';
 
 
 
@@ -294,5 +295,76 @@ export var AJXdropdown = React.createClass({
 		);
 	}
 
+
+});
+
+
+export var FilteredDd = React.createClass({
+	
+        contextTypes : {lang: React.PropTypes.string},
+
+	getInitialState: function(){
+		return {value: ""};
+	},
+
+
+	/* An AJXdropdown have a name prop */
+	propTypes: { name: React.PropTypes.string.isRequired },	
+
+	componentWillMount: function () {
+		var prompter = Prompters[this.props.name];
+
+		if (!prompter) {
+			console.error(this.props.name+" is not a prompter!");
+
+		} else if (prompter.init) {
+			prompter.init(function(){this.forceUpdate();}.bind(this));
+			
+		}
+	},
+	handleChange: function(event) {
+		this.setState({value: event.target.value});
+	},
+	
+	getValues: function(){
+		var values = Prompters[this.props.name].getValues();
+		var inputValue = this.state.value.trim().toLowerCase();
+		var inputLength = inputValue.length;
+
+		if (inputLength === 0) return values;
+
+		return values.filter(function (val) {
+	    		return val.toLowerCase().slice(0, inputLength) === inputValue;
+		 });
+		
+	},
+
+	render: function(){
+
+		var values = this.getValues();
+
+		var grid_vals = this.props.dims ? 
+			this.props.dims.split('+') : ['2','2','2'];
+
+		function makeElement(val, index) { 
+			return (<el key={"ajd"+index} > {val} </el>); 
+		}
+		
+		return (
+			<div>
+				<label className={"control-label col-md-"+grid_vals[0]}>
+				{translate(this.props.label)}
+				</label>
+				<div className={"col-md-"+grid_vals[1]}>
+					<input className="form-control" value={this.state.value} onChange={this.handleChange} />
+				</div>
+				<div className={"dropdown col-md-"+grid_vals[2]}>
+					<Dropdown_internal {...this.props}  >
+						{values.map(makeElement)}
+					</ Dropdown_internal>
+				</div>
+			</div>
+		);
+	}
 
 });

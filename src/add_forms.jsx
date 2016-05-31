@@ -1,5 +1,5 @@
 import React from 'react';
-import {getJSON} from './inputs.jsx';
+import {getJSON, FilteredDd} from './inputs.jsx';
 import * as F from './forms_utils.jsx';
 
 
@@ -122,7 +122,7 @@ var Select_block = React.createClass({
 	search_form: function(){
 		return (
 			<F.Row>
-				<F.Adropdown label="Network" name="cidr" dims="2+1" />
+				<FilteredDd label="Network" name="cidr"  />
 				<F.Input label="Address count" dims="1+1"/>
 				<F.Space dims="1" />
 				<F.Button dims="1" onClick={this.handleSearch}  >
