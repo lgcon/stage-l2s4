@@ -115,6 +115,36 @@ var Prompters = {
 		getValues: function (){
 			return this.domains;
 		}
+	},
+
+	/*************************  Handler name="addr" ***********************/
+
+	addr: {
+		addrs: [],
+
+		/* Fill the machines array with the API answer */
+		init : function (callback)  { 
+			getJSON(apiURL+'/addr', function(response){
+					this.addrs= response;
+					
+			}.bind(this), callback);
+		},
+
+		getSuggestions: function (value, callback){
+			var inputValue = value.trim().toLowerCase();
+			var inputLength = inputValue.length;
+
+			if (inputLength === 0) return [];
+
+			return this.addrs.filter(function (addr) {
+		    		return addr.toLowerCase().slice(0, inputLength) === inputValue;
+		  	});
+		},
+
+		/* Gives all the addresses */
+		getValues: function (){
+			return this.addrs;
+		}
 	}
 
 }
@@ -140,7 +170,9 @@ export var AutoInput = React.createClass({
 
 	/* The state contains the current value of the input
 	   and an array of suggestions (output of getSuggestions)*/
-	getInitialState: () => ({ value: '', suggestions: [] }),
+	getInitialState: function(){
+		return { value: this.props.defaultValue || '', suggestions: [] };
+	},
 
 
 
@@ -247,7 +279,6 @@ export var AJXdropdown = React.createClass({
 	},
 
 	render: function(){
-		
 		var values = Prompters[this.props.name].getValues();
 
 		function makeElement(val, index) { 

@@ -4,6 +4,37 @@ import {getJSON} from './inputs.jsx';
 import * as F from './forms_utils.jsx';
 
 
+
+function form2obj(id){
+	var elements = document.getElementById(id).elements;
+	
+	var obj = {};
+
+	for (var i = 0; i < elements.length; i++){
+		
+		var value;	
+		var el = elements[i];
+		var tag = el.tagName.toLowerCase();
+
+		switch (tag) {
+			
+			case "input":	if (el.type.toLowerCase() == "text")
+						value = el.value;
+					else if (el.type.toLowerCase() == "checkbox")
+						value = el.checked;
+				break;
+
+			case "button": value = el.textContent;
+			
+		}
+		
+		obj[elements[i].name] = value;
+	}
+
+	return obj;
+
+}
+
 /* prop id required */
 export var Add_host = React.createClass({
 
@@ -15,14 +46,11 @@ export var Add_host = React.createClass({
 	handleClick: function (event){
 		event.preventDefault();
 
-		var els = document.getElementById(this.props.id).elements;
+		var els = form2obj(this.props.id);
 
-		var el_val = []; // TODO complete
-		
+		alert("submit "+JSON.stringify(els));
+	
 		if (this.props.submtCallback) this.props.submtCallback(els);
-
-		console.log(els);
-
 		
 	},
 
@@ -36,30 +64,31 @@ export var Add_host = React.createClass({
 			<div>
 			<F.Form id={this.props.id}>
 				<F.Row>
-					<F.InputAdrop label="Name" ddname="domain" defaultValue={d.Name}/>
-					<F.Input label="TTL" dims="2+1"/>
+					<F.InputAdrop label="Name" name ="name" ddname="domain" 
+					              defaultValue={d["name"]} ddDef={d["domain"]} />
+					<F.Input label="TTL" name="ttl" dims="2+1" defaultValue={d["ttl"]} />
 				</F.Row>
 				<F.Row>
-					<F.Ainput label="Ip address" name="cidr" defaultValue={d.Ipaddr}/>
-					<F.Dropdown label="View" selected={d.View}>
+					<F.Ainput label="Ip address" name="addr" defaultValue={d["addr"]} />
+					<F.Dropdown label="View" name="view" defaultValue={d["view"]} >
 						<el>external</el>
 						<el>internal</el>
 					</F.Dropdown>
 				</F.Row>
 				<F.Row>
-					<F.Input label="Mac address"/>
+					<F.Input label="Mac address" name="mac"/>
 					<F.Space dims="2" />
-					<F.Checkbox label="use SMTP" defaultChecked={d["use SMTP"]} />
+					<F.Checkbox label="use SMTP" name="smtp" defaultChecked={d["smtp"]} />
 				</F.Row>
 				<F.Row>
-					<F.Adropdown label="Machine" name="machines" />
+					<F.Adropdown label="Machine" name="machines" defaultValue={d["machines"]} />
 				</F.Row>
 				<F.Row>
-					<F.Input label="Comment"/>
+					<F.Input label="Comment" name="comment" />
 				</F.Row>
 				<F.Row>
-					<F.Input label="Resp. name" defaultValue={d.Respname} />
-					<F.Input label="Resp. mail" defaultValue={d.Respmail} />
+					<F.Input label="Resp. name" name="rname" defaultValue={d["rname"]} />
+					<F.Input label="Resp. mail" name="rmail" defaultValue={d["rmail"]} />
 				</F.Row>
 					
 			</F.Form>
@@ -137,39 +166,73 @@ var Select_block = React.createClass({
 	}
 });
 
+
+
+/* dotted-quad IP to integer */
+function IPv4_dotquadA_to_intA( strbits ) {
+	var split = strbits.split( '.', 4 );
+	var myInt = (
+		parseFloat( split[0] * 16777216 )	/* 2^24 */
+	  + parseFloat( split[1] * 65536 )		/* 2^16 */
+	  + parseFloat( split[2] * 256 )		/* 2^8  */
+	  + parseFloat( split[3] )
+	);
+	return myInt;
+}
+
+/* integer IP to dotted-quad */
+function IPv4_intA_to_dotquadA( strnum ) {
+	var byte1 = ( strnum >>> 24 );
+	var byte2 = ( strnum >>> 16 ) & 255;
+	var byte3 = ( strnum >>>  8 ) & 255;
+	var byte4 = strnum & 255;
+	return ( byte1 + '.' + byte2 + '.' + byte3 + '.' + byte4 );
+}
+
 export var Add_block = React.createClass({
 
  	contextTypes : {lang: React.PropTypes.string},
 
 	getInitialState: function(){
-		return {blockselected: false, defaultAddHost: {} };
+		return {contents: 0, defaultAddHost: {} };
 	},
 
 
 	handleSelect: function(event){
 		event.preventDefault();
-		this.setState({blockselected: true });
+		this.setState({contents: 1});
 	},
 
-	addNext: function(){
-		return; 
+	addNext: function(oldValues){
 		
+		oldValues["name"] = oldValues["name"]
+			.replace(/[0-9][0-9]*$/,function(x){ return parseInt(x)+1; })		
+	
+		oldValues["addr"] = IPv4_intA_to_dotquadA(
+					IPv4_dotquadA_to_intA(oldValues["addr"])+1
+				    );
 		
+		this.setState({contents: 2, defaultAddHost: oldValues});	
+		
+	},
+
+	componentDidUpdate: function(){
+		if (this.state.contents == 2) 
+			this.setState({contents: 1});
 	},
 
 
 	render: function(){
-		if (this.state.blockselected) {
 
-			return ( 
-				<Add_host id="Addblk_addh" defValues={this.defaultAddHost} submtCallback={this.addNext} />
-			);
-		
+		switch (this.state.contents) {
 
-		} else {
-			
-			return ( <Select_block onSelect={this.handleSelect} /> );
+			case 0: return ( <Select_block onSelect={this.handleSelect} /> );
 
+			case 1: return ( 
+					<Add_host id="Addblk_addh" defValues={this.state.defaultAddHost} submtCallback={this.addNext} />
+				);
+
+			case 2: return ( <div></div> ); // Little hack to rerender
 		}
 	}
 });

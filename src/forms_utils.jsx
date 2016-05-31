@@ -79,20 +79,35 @@ export var Button = React.createClass({
 export var Dropdown_internal = React.createClass({
 
 	getInitialState: function(){
-		return { selected: this.props.selected || 0 };
+		
+		var value;
+
+		if (this.props.defaultValue) 
+			value = this.props.defaultValue;
+		else if (this.props.children.length > 0 )
+			value = this.props.children[0].props.children; 
+		else
+			value = undefined;
+		
+		return { value: value };
+	},
+
+	componentWillUpdate: function(newprops) {
+		if (!this.state.value && newprops.children.length > 0)
+			this.setState({value: newprops.children[0].props.children});
 	},
 
  	contextTypes : {lang: React.PropTypes.string},
 
-	handleClick: function(index, event){
+	handleClick: function(child, event){
 			event.preventDefault();
-			this.setState({selected: index});
+			this.setState({value: child.props.children}); //children must NOT be an array
 	},
 
 	makeOption: function(child, index){
 			return (
 				<li key={"dopt"+index}>
-					<a href="#" onClick={this.handleClick.bind(this,index)} >
+					<a href="#" onClick={this.handleClick.bind(this,child)} >
 					{translate(child.props.children)}
 					</a>
 				</li>
@@ -102,18 +117,12 @@ export var Dropdown_internal = React.createClass({
 
 	render: function(){
 
-		var value = "";
-
-		if (this.props.children.length != 0){
-			value = this.props.children[this.state.selected].props.children;
-		}
-
 		return (
 			<div className={this.props.superClass}>
 				<button className="btn btn-default dropdown-toggle" 
 				 type="button"  data-toggle="dropdown" aria-haspopup="true"
 				 aria-expanded="true" {...this.props} >
-					{translate(value)}
+					{translate(this.state.value)}
 					<span className="caret"></span>
 				</button>
 				<ul className="dropdown-menu" >
@@ -196,7 +205,7 @@ export var Inputdrop = React.createClass({
 				<div className={"input-group col-md-"+grid_vals[1]}
 				     style={{"paddingLeft": "15px", "float": "left"}} >
 					<input className="form-control" {...props} />
-					<Dropdown_internal name={this.props.ddname} 
+					<Dropdown_internal name={this.props.ddname} defaultValue={this.props.ddDef}
 					 superClass="input-group-btn" >
 						{this.props.children}
 					</Dropdown_internal>
@@ -229,7 +238,7 @@ export var InputAdrop = React.createClass({
 				<div className={"input-group col-md-"+grid_vals[1]}
 				     style={{"paddingLeft": "15px", "float": "left"}} >
 					<input className="form-control" {...props} />
-					<AJXdropdown name={this.props.ddname} 
+					<AJXdropdown name={this.props.ddname} defaultValue={this.props.ddDef}
 					  superClass="input-group-btn" />
 				</div>
 			</div>
