@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Translator} from './lang.jsx';
+import {Translator, updateTranslations} from './lang.jsx';
 import {Tabs, Pane} from './bootstrap-lib/tabs.jsx';
 import {Add_host, Add_block } from './forms/add.jsx';
 
