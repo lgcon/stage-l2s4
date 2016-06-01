@@ -1,9 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Autosuggest from 'react-autosuggest';
-import {Dropdown_internal} from './bootstrap-lib/form-utils.jsx';
-import {translate} from './lang.jsx';
+import {Dropdown_internal} from './form-utils.jsx';
+import {translate} from '../lang.jsx';
 
+
+/*************** TODO part of this file will be part of form-utils ********************/
 
 
 /* XXX this is a temporary url to the api */

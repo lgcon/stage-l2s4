@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {translate} from '../lang.jsx';
-import {AutoInput, AJXdropdown} from '../inputs.jsx';
+import {AutoInput, AJXdropdown} from './inputs.jsx';
 
 
 /* Props: label, dimension="2+3"*/

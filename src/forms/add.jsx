@@ -1,6 +1,6 @@
 import React from 'react';
-import {getJSON, FilteredDd} from './inputs.jsx';
-import * as F from './bootstrap-lib/form-utils.jsx';
+import {getJSON, FilteredDd} from '../bootstrap-lib/inputs.jsx';
+import * as F from '../bootstrap-lib/form-utils.jsx';
 
 
 
