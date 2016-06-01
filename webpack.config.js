@@ -2,7 +2,7 @@ const webpack = require('webpack');
 
 module.exports = {
     entry: {
-	'tabs': './src/bootstrap-lib/tabs.jsx'
+	'add-app': './src/add-app.jsx'
     },
     output: {
         path: 'dist/',
