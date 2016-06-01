@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Add_host, Add_block} from './add_forms.jsx';
-import {Translator, translate, updateTranslations} from './lang.jsx';
+import {Add_host, Add_block} from '../add_forms.jsx';
+import {Translator, translate, updateTranslations} from '../lang.jsx';
 
 
 
