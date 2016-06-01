@@ -5,13 +5,30 @@ import Autosuggest from 'react-autosuggest';
 import {Prompters} from './inputs.jsx';
 
 
-/* Props: label, dimension="2+3"*/
-/* note: value =/= defaultvalue */
+
+/** 
+ * Creates an uncontrolled Bootstrap-like input field preceded by a label.
+ * Every property passed to this object is passed to the input field.
+ *
+ * @properties:
+ *	-label: defines the contents of the label (required) //TODO make it optional
+ *	-dims : defines the dimensions of this component following the
+ *		Bootstrap grid system. Use the following syntax: "x+y"
+ *		where x is the space reserved for the label and y is the
+ *		space reserved for the input field.
+ *	  
+ * @note:  to fill the input with a default value use the React-specific prop 
+ *	   'defaultValue' and not the prop 'value'.
+ *	    more infos: https://facebook.github.io/react/docs/forms.html#uncontrolled-components
+ */
+
 export var Input = React.createClass({
 	
  	contextTypes : {lang: React.PropTypes.string},
 	
 	render: function(){
+		
+		/* The default value of dims is "2+3" */
 		var grid_vals = this.props.dims ? 
 			this.props.dims.split('+') : ['2','3'];
 			
@@ -29,6 +46,19 @@ export var Input = React.createClass({
 	}
 
 });
+
+
+
+
+
+/**
+ * Same as Input but uses the component AutoInput to perform live-suggestions.
+ * Use the html attribute 'name' to link this component the correct
+ * handler contained inside the object Propmters.
+ *
+ * @properties: (same as Input)
+ * @see Input, AutoInput
+ */
 
 export var Ainput = React.createClass({
 	
@@ -54,12 +84,24 @@ export var Ainput = React.createClass({
 });
 
 
-/* @prec a button can have only text as a child */
+/**
+ * Simple Bootstrap-like button. Every property passed to this button is 
+ * passed as an attribute to the html button node. 
+ * Use this component as a normal button to wrap some text.
+ *
+ * @properties:
+ *	-dims : space reserved to the button following the Bootstrap grid system
+ *		(ex. dims="3")
+ *	
+ * @prec this component should have only text as a child
+ */
 export var Button = React.createClass({
 	
  	contextTypes : {lang: React.PropTypes.string},
 	
 	render: function(){
+
+		/* By default dims="2" */
 		var grid_val = this.props.dims ? 
 			this.props.dims : '2';
 
@@ -76,36 +118,56 @@ export var Button = React.createClass({
 
 
 
-/* @prec a button can have only wrapped text as a child */
 export var Dropdown_internal = React.createClass({
 
-	getInitialState: function(){
-		
-		var value;
-
-		if (this.props.defaultValue) 
-			value = this.props.defaultValue;
-		else if (this.props.children.length > 0 )
-			value = this.props.children[0].props.children; 
-		else
-			value = undefined;
-		
-		return { value: value };
-	},
-
-	componentWillUpdate: function(newprops) {
-	
-		if ( (!this.state.value || this.props != newprops) 
-		      &&  newprops.children.length > 0) // See async and FilteredDd
-			this.setState({value: newprops.children[0].props.children});
-	},
 
  	contextTypes : {lang: React.PropTypes.string},
 
+
+	getInitialState: function(){
+	
+		/* If defaultValue is defined use it as initial
+ 		   value, otherwise use the contents of the first
+		   child */	
+
+		if (this.props.defaultValue) 
+			return {value: this.props.defaultValue};
+
+		else if (this.props.children.length > 0 )
+			return {value: this.props.children[0].props.children};
+
+		else
+			return {value: undefined};
+		
+	},
+
+
+
+	/* At every update if possible use the contents of the first 
+	   child as value: if the value is not defined or there are new
+	   children (see filter dropdown)  */
+
+	componentWillUpdate: function(newprops) {
+			
+		if (newprops.children.length > 0) {
+			if ( this.state.value == undefined || 
+			     this.props.children != newprops.children){
+
+				this.setState(
+					{value: newprops.children[0].props.children}
+				);
+			}
+		}
+	},
+
+	
+	
+	/* Set the contents of the child that has been clicked as value */
 	handleClick: function(child, event){
 			event.preventDefault();
-			this.setState({value: child.props.children}); //children must NOT be an array
+			this.setState({value: child.props.children});
 	},
+
 
 	makeOption: function(child, index){
 			return (
@@ -138,7 +200,6 @@ export var Dropdown_internal = React.createClass({
 
 
 /* @prec a button can have only wrapped text as a child */
-/* TODO add label */
 export var Dropdown = React.createClass({
 
  	contextTypes : {lang: React.PropTypes.string},
