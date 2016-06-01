@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Autosuggest from 'react-autosuggest';
-import {Dropdown_internal} from './forms_utils.jsx';
+import {Dropdown_internal} from './bootstrap-lib/form-utils.jsx';
 import {translate} from './lang.jsx';
 
 
