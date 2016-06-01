@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {translate} from '../lang.jsx';
-import {AutoInput, AJXdropdown} from './inputs.jsx';
+import Autosuggest from 'react-autosuggest';
+import {Prompters} from './inputs.jsx';
 
 
 /* Props: label, dimension="2+3"*/
@@ -320,4 +321,222 @@ export var Form = React.createClass({
 		);
 	}
 	
+});
+
+
+
+
+/**
+ * Use this component to generate an input field with automatic suggestions.
+ * Note that all the properties of AutoInput will be passed to the imput field.
+ * AutoInput must have a `name` property and it's value must correspond
+ * with the name of an handler contained inside the Prompters (see above).
+ * 
+ * Example of use:
+ *
+ *	ReactDOM.render(
+ *		<AutoInput placeholder="Insert a network address" name="cidr" 
+ *		   className="myclassname" style={{width: "30%"}} />, 
+ *		document.getElementById('app')
+ * 	);
+ */
+export var AutoInput = React.createClass({
+
+
+	/* The state contains the current value of the input
+	   and an array of suggestions (output of getSuggestions)*/
+	getInitialState: function(){
+		return { value: this.props.defaultValue || '', suggestions: [] };
+	},
+
+
+
+
+	/* An AutoInput element must have a name prop */
+	propTypes: { name: React.PropTypes.string.isRequired },	
+
+
+
+	/* At the very beginning call check for the existens of the
+	   prompter and call his init function if it's defined */
+	componentWillMount: function () {
+		var prompter = Prompters[this.props.name];
+
+		if (!prompter) {
+			console.error(this.props.name+" is not a prompter!");
+
+		} else if (prompter.init) {
+			prompter.init();
+			
+		}
+	},
+
+	/* Use the function getSuggestions defined by the prompter
+	   to get the actual suggestions from the current value */
+	getSuggestions: function (value) {
+		return Prompters[this.props.name].getSuggestions(value);
+	},
+
+
+
+	/* In this component we consider suggestions to always be strings,
+	   this function tells Autosuggest how to map the suggestion to 
+	   the input value when the first is selected */
+	getSuggestionValue:(suggestions) => suggestions,
+
+
+
+	/* As this is controlled Update the state with the new value */
+	onChange: function (event, {newValue}) {
+		this.setState({value: newValue});
+	},
+
+	/* */
+	onSuggestionsUpdateRequested: function ({value}) {
+		this.setState({suggestions: this.getSuggestions(value)});
+	},
+
+
+	/* Suggestions are rendered wrapping them in a <span> element */
+	renderSuggestion: (suggestion) => (<span>{suggestion}</span>),
+
+	
+	/* Main render */
+	render: function () {
+
+		/* Pass the value and the onChange function to the
+		   input. So it will work as a controlled component */
+		var inputProps = {
+			value : this.state.value,
+			onChange : this.onChange
+		};
+
+		/* Copy all the properties of AutoInput in order to
+		   pass them to Autosuggest */
+		$.extend(inputProps, this.props);
+
+		return ( 
+			<Autosuggest 
+			suggestions = {this.state.suggestions} 
+			onSuggestionsUpdateRequested = {this.onSuggestionsUpdateRequested}
+			getSuggestionValue = {this.getSuggestionValue}
+			renderSuggestion = {this.renderSuggestion}
+			inputProps = {inputProps}
+			/>
+		);
+	}
+});
+
+
+
+
+
+
+
+export var AJXdropdown = React.createClass({
+	
+        contextTypes : {lang: React.PropTypes.string},
+
+
+	/* An AJXdropdown have a name prop */
+	propTypes: { name: React.PropTypes.string.isRequired },	
+
+	componentWillMount: function () {
+		var prompter = Prompters[this.props.name];
+
+		if (!prompter) {
+			console.error(this.props.name+" is not a prompter!");
+
+		} else if (prompter.init) {
+			prompter.init(function(){this.forceUpdate();}.bind(this));
+			
+		}
+	},
+
+	render: function(){
+		var values = Prompters[this.props.name].getValues();
+
+		function makeElement(val, index) { 
+			return (<el key={"ajd"+index} > {val} </el>); 
+		}
+		
+		return (
+			<Dropdown_internal {...this.props}  >
+				{values.map(makeElement)}
+			</ Dropdown_internal>
+		);
+	}
+
+
+});
+
+
+export var FilteredDd = React.createClass({
+	
+        contextTypes : {lang: React.PropTypes.string},
+
+	getInitialState: function(){
+		return {value: ""};
+	},
+
+
+	/* An AJXdropdown have a name prop */
+	propTypes: { name: React.PropTypes.string.isRequired },	
+
+	componentWillMount: function () {
+		var prompter = Prompters[this.props.name];
+
+		if (!prompter) {
+			console.error(this.props.name+" is not a prompter!");
+
+		} else if (prompter.init) {
+			prompter.init(function(){this.forceUpdate();}.bind(this));
+			
+		}
+	},
+	handleChange: function(event) {
+		this.setState({value: event.target.value});
+	},
+	
+	getValues: function(){
+		var values = Prompters[this.props.name].getValues();
+		var inputValue = this.state.value.trim().toLowerCase();
+		var inputLength = inputValue.length;
+
+		if (inputLength === 0) return values;
+
+		return values.filter(function (val) {
+	    		return val.toLowerCase().slice(0, inputLength) === inputValue;
+		 });
+		
+	},
+
+	render: function(){
+
+		var values = this.getValues();
+
+		var grid_vals = this.props.dims ? 
+			this.props.dims.split('+') : ['2','2','2'];
+
+		function makeElement(val, index) { 
+			return (<el key={"ajd"+index} > {val} </el>); 
+		}
+		
+		return (
+			<div>
+				<label className={"control-label col-md-"+grid_vals[0]}>
+				{translate(this.props.label)}
+				</label>
+				<div className={"col-md-"+grid_vals[1]}>
+					<input className="form-control" value={this.state.value} onChange={this.handleChange} />
+				</div>
+				<div className={"dropdown col-md-"+grid_vals[2]}>
+					<Dropdown_internal {...this.props}  >
+						{values.map(makeElement)}
+					</ Dropdown_internal>
+				</div>
+			</div>
+		);
+	}
+
 });
