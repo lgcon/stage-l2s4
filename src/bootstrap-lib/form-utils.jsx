@@ -117,12 +117,33 @@ export var Button = React.createClass({
 
 
 
-
-export var Dropdown_internal = React.createClass({
+/**
+ * This component creates a simple bootstrap-like dropdown using the 
+ * contents of the children as list element. The children can contain only
+ * text. You can use whatever html tag to indicate the children (by convention
+ * I suggest you to use the tag <el> </el> as it is short and descriptive).
+ * All the properties passed to theis component are passed directly to the
+ * button element as attributes
+ *
+ * @properties:
+ *	-superClass: Is the same of className but it will affect the whole
+ *		     component and not only the internal button
+ * 
+ * Example of use:
+ *	<Dropdown_internal superClass="beautiful_dropdown" >
+ *		<el> element 1 </el> 
+ *		<el> element 2 </el> 
+ *		<el> element 3 </el> 
+ * 	</Dropdown_internal>
+ */
+export var Dropdown_internal = React.createClass({ /*TODO change name */
 
 
  	contextTypes : {lang: React.PropTypes.string},
 
+
+	/* The state contains an attribute value which indicate
+	   the current (selected) contents of the dropdown */
 
 	getInitialState: function(){
 	
@@ -169,6 +190,9 @@ export var Dropdown_internal = React.createClass({
 	},
 
 
+
+	/* Creates an element of the dropdown containing the text inside
+	   the given child (so make sure the child contains only text) */
 	makeOption: function(child, index){
 			return (
 				<li key={"dopt"+index}>
@@ -180,6 +204,7 @@ export var Dropdown_internal = React.createClass({
 	},
 
 
+	/* Main render */
 	render: function(){
 
 		return (
@@ -199,7 +224,89 @@ export var Dropdown_internal = React.createClass({
 });
 
 
-/* @prec a button can have only wrapped text as a child */
+
+
+
+
+
+
+
+/**
+ * Creates a Bootstrap-like dropdown which element will be charged
+ * automatically trough async ajax request using the proper hanlder.
+ *
+ * @properties: same as Dropdown_internal, plus
+ *	-name: defines the name of the handler
+ * 
+ * Example of use:
+ *	 <AJXdropdown name="foods" superClass="foodSelector" />
+ *	
+ */
+export var AJXdropdown = React.createClass({
+	
+        contextTypes : {lang: React.PropTypes.string},
+
+
+	/* An AJXdropdown have a name prop */
+	propTypes: { name: React.PropTypes.string.isRequired },	
+
+	componentWillMount: function () {
+		var prompter = Prompters[this.props.name];
+
+		if (!prompter) {
+			console.error(this.props.name+" is not a prompter!");
+
+		} else if (prompter.init) {
+			prompter.init(function(){this.forceUpdate();}.bind(this));
+			
+		}
+	},
+
+	render: function(){
+		var values = Prompters[this.props.name].getValues();
+
+		function makeElement(val, index) { 
+			return (<el key={"ajd"+index} > {val} </el>); 
+		}
+		
+		return (
+			<Dropdown_internal {...this.props}  >
+				{values.map(makeElement)}
+			</ Dropdown_internal>
+		);
+	}
+
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * Creates a Bootstrap-like dropdown preceded by a label.
+ * For more infos see Dropdown_internal.
+ * 
+ * @properties: sames ad Dropdown_internal, plus
+ *	-label: The contents of the label preceding the dropdown
+ *	-dims : Dimensions following bootstrap's grid system (see Input)
+ *
+ * Example of use: 
+ *	<Dropdown dims="2+2" label="Select an animal" />
+ *		<el> Lyon </el>
+ *		<el> Fox  </el>
+ *		<el> Dog  </el>
+ * 	</Dropdown>
+ */
 export var Dropdown = React.createClass({
 
  	contextTypes : {lang: React.PropTypes.string},
@@ -224,6 +331,25 @@ export var Dropdown = React.createClass({
 
 
 
+
+
+
+
+
+
+
+/**
+ * Same as Dropdown but with a list of elements charged trough 
+ * async AJAX call (see AJXdropdown).
+ * 
+ * @properties:
+ *	-label: The contents of the label preceding the dropdown
+ *	-dims : Dimensions following bootstrap's grid system (see Input)
+ *	-name : Name of the handler (see AJXdropdown)
+ *
+ * Example of use:
+ * 	<Adropdown name="animals" label="Select an animal" dims="3+2" />
+ */
 export var Adropdown = React.createClass({
 
  	contextTypes : {lang: React.PropTypes.string},
@@ -246,6 +372,27 @@ export var Adropdown = React.createClass({
 	}
 });
 
+
+
+
+/**
+ * Creates an input field which ends with a dropdown, everything preceded
+ * by a label. All the properties are passed directly as attributes of the 
+ * input field. For more infos see Input and Dropdown_internal.
+ *
+ * @properties:
+ *	-label: The contents of the label preceding the dropdown
+ *	-dims : Dimensions following bootstrap's grid system (see Input)
+ *	-ddname:  The attribute name to pass to the dropdown
+ *	-ddDef: The default value of the dropdown
+ * 
+ * Example of use:
+ *	<Inputdrop label="Create your e-mail" ddname="availableDomains" ddDef="Select a domain">
+ *		<el> @toto.fr </el>
+ *		<el> @truc.eu </el>
+ *		<el> @foo.com </el>
+ *	</Inputdrop>
+ */
 
 export var Inputdrop = React.createClass({
 
@@ -280,6 +427,13 @@ export var Inputdrop = React.createClass({
 
 });
 
+
+
+/**
+ * Same as Inputdrop but with a list of elements charged trough 
+ * async AJAX call (see AJXdropdown).
+ */
+
 export var InputAdrop = React.createClass({
 
  	contextTypes : {lang: React.PropTypes.string},
@@ -311,7 +465,18 @@ export var InputAdrop = React.createClass({
 
 });
 
-/* Props side=[right|left] */
+/**
+ * Creates a Bootstrap-like checkbox followed by a label
+ * All the properties passed to this component will be
+ * passed as attributes of the checkbox.
+ *
+ * @properties: 
+ *	-label: The contents of the label following the checkbox
+ *	-dims : Dimensions following bootstrap's grid system (see Input)
+ * 
+ * Example of use:
+ *	<Checkbox name="colors" label="Print with colors" dims="3" />
+ */
 export var Checkbox = React.createClass({
 	
  	contextTypes : {lang: React.PropTypes.string},
@@ -321,16 +486,11 @@ export var Checkbox = React.createClass({
 		var grid_val = this.props.dims ? 
 			this.props.dims : '2';
 
-		var side = this.props.side ? this.props.side : 'right';
-
-		var label = translate(this.props.label);
-
 		return (
 			<div className={"checkbox col-md-"+grid_val}>
 				<label>
-					{side === 'left' ? label : null}
 					<input type="checkbox" {...this.props} /> 
-					{side === 'right' ? label : null}
+					{translate(this.props.label)}
 				</label>
   			</div>
 		);
@@ -338,12 +498,18 @@ export var Checkbox = React.createClass({
 });
 
 
+/**
+ * This component occupies empty space on the grid system.
+ * Use it to align the other components if necessary 
+ * 
+ * @properties: 
+ *	-dims : Dimensions following bootstrap's grid system (see Input)
+ */
 export var Space = React.createClass({
-
 
 	render: function(){
 		var grid_val = this.props.dims ? 
-			this.props.dims : '2';
+			this.props.dims : '1';
 
 		return (
 			<div className={"col-md-"+grid_val} />
@@ -352,9 +518,25 @@ export var Space = React.createClass({
 
 });
 
+
+
+/**
+ * Use this component to wrap other elements if you want them to be
+ * on the same row.
+ *
+ * Example of use:
+ *	   <Row>
+ *		<Input (input props....)  />
+ *		<Dropdown (dropdown props....)>  
+ *			<el> Element 1 </el>
+ *			<el> Element 2 </el>
+ *		</Dropdown>
+ *	   </Row>
+ */
+
 export var Row = React.createClass({
 
- 	contextTypes : {lang: React.PropTypes.string},
+	contextTypes : {lang: React.PropTypes.string},
 
 	render: function(){
 
@@ -368,7 +550,11 @@ export var Row = React.createClass({
 });
 
 
-
+/**
+ * Creates a form. The properties passed to this component are passed
+ * automatically as attributes of the html element <form>
+ * Use it to wrap the other components when creating a form.
+ */
 export var Form = React.createClass({
 	
  	contextTypes : {lang: React.PropTypes.string},
@@ -494,43 +680,22 @@ export var AutoInput = React.createClass({
 
 
 
-export var AJXdropdown = React.createClass({
-	
-        contextTypes : {lang: React.PropTypes.string},
 
-
-	/* An AJXdropdown have a name prop */
-	propTypes: { name: React.PropTypes.string.isRequired },	
-
-	componentWillMount: function () {
-		var prompter = Prompters[this.props.name];
-
-		if (!prompter) {
-			console.error(this.props.name+" is not a prompter!");
-
-		} else if (prompter.init) {
-			prompter.init(function(){this.forceUpdate();}.bind(this));
-			
-		}
-	},
-
-	render: function(){
-		var values = Prompters[this.props.name].getValues();
-
-		function makeElement(val, index) { 
-			return (<el key={"ajd"+index} > {val} </el>); 
-		}
-		
-		return (
-			<Dropdown_internal {...this.props}  >
-				{values.map(makeElement)}
-			</ Dropdown_internal>
-		);
-	}
-
-
-});
-
+/**
+ * Generates a dropdown which elements are charged dinamically trough ajax
+ * requestm, preceded by an imput field that can be use to filter out the
+ * elements of the dropdown. Everything is preceded by a label.
+ * 
+ * FIXME when all the elements are filtered out the dropdown keeps
+ * the previous value.
+ *
+ * @properties: 
+ *	-name : Name of the handler (see AJXdropdown)
+ *	-label: Contents of the label preceding the input field and the dropdown
+ *	-dims : Dimensions following bootstrap's grid system (see Input)
+ * Example of use:
+ *	  <FilteredDd name="contacts" label="select a contact" dims="3+2+1" />
+ */
 
 export var FilteredDd = React.createClass({
 	
