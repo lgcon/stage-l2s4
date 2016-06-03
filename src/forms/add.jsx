@@ -1,5 +1,4 @@
 import React from 'react';
-import {getJSON} from '../bootstrap-lib/inputs.jsx';
 import * as C from '../common.js';
 import * as F from '../bootstrap-lib/form-utils.jsx';
 

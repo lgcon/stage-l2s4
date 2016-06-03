@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {translate} from '../lang.jsx';
 import Autosuggest from 'react-autosuggest';
-import {Prompters} from './inputs.jsx';
+import {Prompters} from './prompters.jsx';
 
 
 
