@@ -108,8 +108,8 @@ var Select_block = React.createClass({
 	
 		if (!this.state.blocks) return null;
 
-		function makeEl({first, size}){
-			return (<el> {first+" (size: "+size+")"} </el>);
+		function makeEl({first, size}, i){
+			return (<el key={i+"elsf"} > {first+" (size: "+size+")"} </el>);
 		}
 		
 		return (

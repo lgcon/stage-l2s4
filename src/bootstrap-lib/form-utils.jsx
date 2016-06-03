@@ -216,7 +216,6 @@ export var Dropdown_internal = React.createClass({ /*TODO change name */
 
 	/* Main render */
 	render: function(){
-		console.log("render dd");
 
 		return (
 			<div className={this.props.superClass}>
