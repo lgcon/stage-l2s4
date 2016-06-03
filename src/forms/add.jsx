@@ -87,7 +87,7 @@ var Select_block = React.createClass({
 		var els = document.getElementById('Search block').elements;
 		var query = C.APIURL + "/addrblock";
 
-		getJSON(query,function(res){this.setState({ blocks: res });}.bind(this));
+		C.getJSON(query,function(res){this.setState({ blocks: res });}.bind(this));
 	},
 
 	search_form: function(){
@@ -139,26 +139,6 @@ var Select_block = React.createClass({
 
 
 
-/* dotted-quad IP to integer */
-function IPv4_dotquadA_to_intA( strbits ) {
-	var split = strbits.split( '.', 4 );
-	var myInt = (
-		parseFloat( split[0] * 16777216 )	/* 2^24 */
-	  + parseFloat( split[1] * 65536 )		/* 2^16 */
-	  + parseFloat( split[2] * 256 )		/* 2^8  */
-	  + parseFloat( split[3] )
-	);
-	return myInt;
-}
-
-/* integer IP to dotted-quad */
-function IPv4_intA_to_dotquadA( strnum ) {
-	var byte1 = ( strnum >>> 24 );
-	var byte2 = ( strnum >>> 16 ) & 255;
-	var byte3 = ( strnum >>>  8 ) & 255;
-	var byte4 = strnum & 255;
-	return ( byte1 + '.' + byte2 + '.' + byte3 + '.' + byte4 );
-}
 
 export var Add_block = React.createClass({
 
@@ -179,8 +159,8 @@ export var Add_block = React.createClass({
 		oldValues["name"] = oldValues["name"]
 			.replace(/[0-9][0-9]*$/,function(x){ return parseInt(x)+1; })		
 	
-		oldValues["addr"] = IPv4_intA_to_dotquadA(
-					IPv4_dotquadA_to_intA(oldValues["addr"])+1
+		oldValues["addr"] = C.IPv4_intA_to_dotquadA(
+					C.IPv4_dotquadA_to_intA(oldValues["addr"])+1
 				    );
 		
 		this.setState({contents: 2, defaultAddHost: oldValues});	
