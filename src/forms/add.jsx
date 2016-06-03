@@ -122,7 +122,8 @@ var Select_block = React.createClass({
 	search_form: function(){
 		return (
 			<F.Row>
-				<F.FilteredDd label="Network" name="cidr"  />
+				<F.InputXORdd label="Network" 
+				 name="cidr" defaultValue="Select one" />
 				<F.Input label="Address count" dims="1+1"/>
 				<F.Space dims="1" />
 				<F.Button dims="1" onClick={this.handleSearch}  >
@@ -228,7 +229,9 @@ export var Add_block = React.createClass({
 			case 0: return ( <Select_block onSelect={this.handleSelect} /> );
 
 			case 1: return ( 
-					<Add_host id="Addblk_addh" defValues={this.state.defaultAddHost} submtCallback={this.addNext} />
+					<Add_host id="Addblk_addh" 
+					 defValues={this.state.defaultAddHost}
+					 submtCallback={this.addNext} />
 				);
 
 			case 2: return ( <div></div> ); // Little hack to rerender

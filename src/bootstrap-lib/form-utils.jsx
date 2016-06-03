@@ -128,6 +128,8 @@ export var Button = React.createClass({
  * @properties:
  *	-superClass: Is the same of className but it will affect the whole
  *		     component and not only the internal button
+ *	-defaultValue: force the initial value
+ *	-value: force the value
  * 
  * Example of use:
  *	<Dropdown_internal superClass="beautiful_dropdown" >
@@ -151,8 +153,11 @@ export var Dropdown_internal = React.createClass({ /*TODO change name */
  		   value, otherwise use the contents of the first
 		   child */	
 
-		if (this.props.defaultValue) 
+		if (this.props.defaultValue != undefined ) 
 			return {value: this.props.defaultValue};
+		
+		else if (this.props.value != undefined ) 
+			return {value: this.props.value};
 
 		else if (this.props.children.length > 0 )
 			return {value: this.props.children[0].props.children};
@@ -164,16 +169,19 @@ export var Dropdown_internal = React.createClass({ /*TODO change name */
 
 
 
-	/* At every update if possible use the contents of the first 
-	   child as value: if the value is not defined or there are new
-	   children (see filter dropdown)  */
+	/* At every update if possible use the props value as state or the 
+	   contents of the first child as value if the value is not defined 
+	   or there are new children (see filter dropdown)  */
 
-	componentWillUpdate: function(newprops) {
-			
-		if (newprops.children.length > 0) {
-			if ( this.state.value == undefined || 
-			     this.props.children != newprops.children){
+	componentWillReceiveProps: function(newprops) {
+		
+		if (newprops.value != undefined )
+				this.setState({value: newprops.value });	
 
+		else if (newprops.children.length > 0) {
+			if ( this.state.value == undefined /*|| 
+			     this.props.children != newprops.children*/){ //TODO FIX
+				
 				this.setState(
 					{value: newprops.children[0].props.children}
 				);
@@ -183,12 +191,14 @@ export var Dropdown_internal = React.createClass({ /*TODO change name */
 
 	
 	
-	/* Set the contents of the child that has been clicked as value */
+	/* Set the contents of the child that has been clicked as value 
+	   and execute the onChange callback */
 	handleClick: function(child, event){
 			event.preventDefault();
 			this.setState({value: child.props.children});
+			this.props.onChange();
+			
 	},
-
 
 
 	/* Creates an element of the dropdown containing the text inside
@@ -206,6 +216,7 @@ export var Dropdown_internal = React.createClass({ /*TODO change name */
 
 	/* Main render */
 	render: function(){
+		console.log("render dd");
 
 		return (
 			<div className={this.props.superClass}>
@@ -247,7 +258,7 @@ export var AJXdropdown = React.createClass({
         contextTypes : {lang: React.PropTypes.string},
 
 
-	/* An AJXdropdown have a name prop */
+	/* An AJXdropdown has a name prop */
 	propTypes: { name: React.PropTypes.string.isRequired },	
 
 	componentWillMount: function () {
@@ -706,7 +717,7 @@ export var FilteredDd = React.createClass({
 	},
 
 
-	/* An AJXdropdown have a name prop */
+	/* An AJXdropdown has a name prop */
 	propTypes: { name: React.PropTypes.string.isRequired },	
 
 	componentWillMount: function () {
@@ -760,6 +771,70 @@ export var FilteredDd = React.createClass({
 					<Dropdown_internal {...this.props}  >
 						{values.map(makeElement)}
 					</ Dropdown_internal>
+				</div>
+			</div>
+		);
+	}
+
+});
+
+
+
+
+/**
+ * @properties:
+ *	-label:
+ *	-defaultValue:
+ *	-iname, dname:
+ *	-placeholder:
+ */
+
+export var InputXORdd = React.createClass({
+	
+        contextTypes : {lang: React.PropTypes.string},
+
+	getInitialState: function(){
+		return {Ivalue: "", Dvalue: undefined };
+	},
+
+	/* An AJXdropdown has a name prop */
+	propTypes: { name: React.PropTypes.string.isRequired },	
+
+	handleChange: function(event) {
+		event.preventDefault();
+		this.setState({Ivalue: event.target.value });
+	},
+	
+	ddChange: function() {
+		this.setState({Ivalue: "", Dvalue: undefined});
+	},
+
+	onBlur: function(event) {
+		event.preventDefault();
+		this.setState({Dvalue: ""});
+		
+	},
+	
+	render: function(){
+
+
+		var grid_vals = this.props.dims ? 
+			this.props.dims.split('+') : ['2','2','2'];
+
+		
+		return (
+			<div>
+				<label className={"control-label col-md-"+grid_vals[0]}>
+				{translate(this.props.label)}
+				</label>
+				<div className={"col-md-"+grid_vals[1]}>
+					<input className="form-control" value={this.state.Ivalue} 
+					 onChange={this.handleChange} onBlur={this.onBlur}
+					 name={this.props.name}  placeholder={this.props.placeholder} />
+				</div>
+				<div className={"dropdown col-md-"+grid_vals[2]}>
+					<AJXdropdown onChange={this.ddChange} value={this.state.Dvalue}
+					 name={this.props.name} defaultValue={this.props.defaultValue}  />
 				</div>
 			</div>
 		);
