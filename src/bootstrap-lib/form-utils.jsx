@@ -841,3 +841,36 @@ export var InputXORdd = React.createClass({
 	}
 
 });
+
+
+
+
+
+export function form2obj(id){
+	var elements = document.getElementById(id).elements;
+	
+	var obj = {};
+
+	for (var i = 0; i < elements.length; i++){
+		
+		var value;	
+		var el = elements[i];
+		var tag = el.tagName.toLowerCase();
+
+		switch (tag) {
+			
+			case "input":	if (el.type.toLowerCase() == "text")
+						value = el.value;
+					else if (el.type.toLowerCase() == "checkbox")
+						value = el.checked;
+				break;
+
+			case "button": value = el.textContent;
+			
+		}
+		
+		obj[elements[i].name] = value;
+	}
+
+	return obj;
+}
