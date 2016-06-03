@@ -1,26 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import * as C from '../common.js';
 
-
-/*************** TODO part of this file will be part of form-utils ********************/
-
-
-/* XXX this is a temporary url to the api */
-var apiURL = 'http://130.79.91.54/stage-l2s4/nm_pages/api';
-
-
-/* XXX same as $.getJSON but defines mimeType
-   usefull in case of static files */
-export var getJSON = function(url, success, callback){
-	$.ajax({
-		url: url,
-		dataType: 'json',
-		mimeType: 'application/json',
-		success:  success,
-		complete: callback
-	});
-}
-		
 
 /**
  * Prompters is the object containing all the handlers that AutoInput
@@ -52,9 +33,7 @@ export var Prompters = {
 
 		/* Fill the networks array with the API answer */
 		init : function (callback)  { 
-			console.log("init");
-			console.log(this.networks);
-			getJSON(apiURL+'/networks', function(response){
+			C.getJSON(C.APIURL+'/networks', function(response){
 				for (var i = 0; i < response.length; i++){
 					this.networks.push(response[i]["addr4"]);
 					this.networks.push(response[i]["addr6"]);
@@ -87,7 +66,7 @@ export var Prompters = {
 
 		/* Fill the machines array with the API answer */
 		init : function (callback)  { 
-			getJSON(apiURL+'/machines', function(response){
+			C.getJSON(C.APIURL+'/machines', function(response){
 					this.machines = response;
 					
 			}.bind(this), callback);
@@ -107,7 +86,7 @@ export var Prompters = {
 
 		/* Fill the machines array with the API answer */
 		init : function (callback)  { 
-			getJSON(apiURL+'/domains', function(response){
+			C.getJSON(C.APIURL+'/domains', function(response){
 					this.domains= response;
 					
 			}.bind(this), callback);
@@ -126,7 +105,7 @@ export var Prompters = {
 
 		/* Fill the machines array with the API answer */
 		init : function (callback)  { 
-			getJSON(apiURL+'/addr', function(response){
+			C.getJSON(C.APIURL+'/addr', function(response){
 					this.addrs= response;
 					
 			}.bind(this), callback);

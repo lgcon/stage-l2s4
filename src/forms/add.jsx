@@ -1,5 +1,6 @@
 import React from 'react';
 import {getJSON} from '../bootstrap-lib/inputs.jsx';
+import * as C from '../common.js';
 import * as F from '../bootstrap-lib/form-utils.jsx';
 
 
@@ -114,7 +115,7 @@ var Select_block = React.createClass({
 		event.preventDefault();
 		/* XXX this is just an example */
 		var els = document.getElementById('Search block').elements;
-		var query = "http://130.79.91.54/stage-l2s4/nm_pages/api/addrblock";//+els[0].textContent+"&nb="+els[1].value;	
+		var query = C.APIURL + "/addrblock";
 
 		getJSON(query,function(res){this.setState({ blocks: res });}.bind(this));
 	},
