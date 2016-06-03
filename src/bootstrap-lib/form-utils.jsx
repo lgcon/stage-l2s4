@@ -810,7 +810,7 @@ export var InputXORdd = React.createClass({
 
 	onBlur: function(event) {
 		event.preventDefault();
-		this.setState({Dvalue: ""});
+		this.setState({Dvalue: this.props.defaultValue || ""});
 		
 	},
 	
@@ -832,7 +832,7 @@ export var InputXORdd = React.createClass({
 					 name={this.props.name}  placeholder={this.props.placeholder} />
 				</div>
 				<div className={"dropdown col-md-"+grid_vals[2]}>
-					<AJXdropdown onChange={this.ddChange} value={this.state.Dvalue}
+					<Adropdown label="or" onChange={this.ddChange} value={this.state.Dvalue}
 					 name={this.props.name} defaultValue={this.props.defaultValue}  />
 				</div>
 			</div>
