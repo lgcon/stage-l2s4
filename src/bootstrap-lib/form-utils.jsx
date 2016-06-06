@@ -781,11 +781,13 @@ export var FilteredDd = React.createClass({
 
 
 /**
+ * Creates an input and a dropdown (the latter preceded by a 'or' label), where
+ * only the last used can contain a value.
  * @properties:
- *	-label:
- *	-defaultValue:
- *	-iname, dname:
- *	-placeholder:
+ *	-label: Content of the label preceding the input field and the dropdown
+ *	-defaultValue: default value of the dropdown
+ *	-iname, dname: names of input field and dropdown (XXX should I use only one name prop and update an hidden input with the good value? )
+ *	-placeholder:  placeholder attribute of the input field
  */
 
 export var InputXORdd = React.createClass({
@@ -793,21 +795,25 @@ export var InputXORdd = React.createClass({
         contextTypes : {lang: React.PropTypes.string},
 
 	getInitialState: function(){
+		// state: { input value , dropdown value }
 		return {Ivalue: "", Dvalue: undefined };
 	},
 
 	/* An AJXdropdown has a name prop */
 	propTypes: { name: React.PropTypes.string.isRequired },	
 
+	/* Update input when the user types */
 	handleChange: function(event) {
 		event.preventDefault();
 		this.setState({Ivalue: event.target.value });
 	},
-	
+
+	/* Select dropdown value */	
 	ddChange: function() {
 		this.setState({Ivalue: "", Dvalue: undefined});
 	},
 
+	/* User leaves the input */
 	onBlur: function(event) {
 		event.preventDefault();
 		this.setState({Dvalue: this.props.defaultValue || ""});
@@ -844,7 +850,10 @@ export var InputXORdd = React.createClass({
 
 
 
-
+/**
+ * Returns an object all the values of the form with the given id. The
+ * keys are the name attributes of the fields of the form 
+ */
 export function form2obj(id){
 	var elements = document.getElementById(id).elements;
 	
