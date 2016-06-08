@@ -1,5 +1,5 @@
 [
-	"foo.com",
-	"toto.fr",
-	"bar.org"
+	{"iddom": 1, "name": "foo.com"},
+	{"iddom": 2, "name": "toto.com"},
+	{"iddom": 3, "name": "bar.com"}
 ]

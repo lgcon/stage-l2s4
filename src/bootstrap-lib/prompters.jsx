@@ -87,7 +87,9 @@ export var Prompters = {
 		/* Fill the machines array with the API answer */
 		init : function (callback)  { 
 			C.getJSON(C.APIURL+'/domains', function(response){
-					this.domains= response;
+					response.forEach(function(val){
+						this.domains.push(val.name);
+					});
 					
 			}.bind(this), callback);
 		},
@@ -104,7 +106,7 @@ export var Prompters = {
 		addrs: [],
 
 		/* Fill the machines array with the API answer */
-		init : function (callback)  { 
+		init : function (callback) { 
 			C.getJSON(C.APIURL+'/addr', function(response){
 					this.addrs= response;
 					
@@ -126,7 +128,24 @@ export var Prompters = {
 		getValues: function (){
 			return this.addrs;
 		}
+	},
+
+	/*************************  Handler name="dhcprange" *******************/
+
+	dhcprange: {
+
+		/** TODO **/
+		dhcpranges: []
+
+
+
 	}
+		
+
+
+
+
+	
 
 }
 
