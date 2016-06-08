@@ -195,8 +195,9 @@ export var Dropdown_internal = React.createClass({ /*TODO change name */
 	   and execute the onChange callback */
 	handleClick: function(child, event){
 			event.preventDefault();
-			this.setState({value: child.props.children});
-			if (this.props.onChange) this.props.onChange();
+			var newValue = child.props.children;
+			this.setState({value: newValue});
+			if (this.props.onChange) this.props.onChange(newValue);
 			
 	},
 
