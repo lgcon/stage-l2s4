@@ -22,6 +22,8 @@ import * as C from '../common.js';
  *		must return an array of suggestions
  * 	- A function `getValues()` (required if dropdown):
  *		same as getSuggestions but used for the dropdown
+ *
+ * TODO update this documentation
  */
 
 export var Prompters = {
@@ -89,7 +91,7 @@ export var Prompters = {
 			C.getJSON(C.APIURL+'/domains', function(response){
 					response.forEach(function(val){
 						this.domains.push(val.name);
-					});
+					}.bind(this));
 					
 			}.bind(this), callback);
 		},
@@ -135,19 +137,81 @@ export var Prompters = {
 	dhcprange: {
 
 		/** TODO **/
-		dhcpranges: []
+		dhcpranges: [],
+
+		init : function (callback) { 
+
+			C.getJSON(C.APIURL+'/dhcpranges', function(response){
+					this.dhcpranges = response;
+					
+			}.bind(this), callback);
+		},
+
+		/* Gives all the addresses */
+		getValues: function (){
+			return this.dhcpranges;
+		}
+
+
+
+	},
+	
+	
+	/*************************  Handler name="dhcp" *******************/
+
+	dhcp: {
+
+		/** TODO **/
+		dhcp: [],
+
+		init : function (callback) { 
+			var _callback = function(){this._combine(callback);}.bind(this);
+
+			var c = new CallbackCountdown(_callback,2); /* XXX This will be 3 */
+
+			Prompters.domain.init(c.callback);
+			Prompters.dhcprange.init(c.callback);
+		},
+
+		_combine: function (callback){
+			var dhcpranges = Prompters.dhcprange.getValues();
+			var domains = Prompters.domain.getValues();
+			for (var i = 0; i < dhcpranges.length; i++){
+				var cpy = $.extend({'domain': domains},dhcpranges[i]);
+				this.dhcp.push(cpy);
+
+			}
+
+			callback();
+
+
+		},
+
+		/* Gives all the addresses */
+		getValues: function (){
+			return this.dhcp;
+		}
 
 
 
 	}
 		
 
-
-
-
-	
-
 }
 
 
+var CallbackCountdown = function (callback, n) {
+	this.count = 0;
+	this.n = n;
+	this._callback = callback;
+	this.callback = function(){
+		this.count++;
+		if (this.count >= this.n){
+			return this._callback.apply(this, arguments);
+		}
+	}.bind(this);
+}
+	
+	
+	
 

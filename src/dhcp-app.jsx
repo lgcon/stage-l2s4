@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {Translator, updateTranslations} from './lang.jsx';
 import * as F from './bootstrap-lib/form-utils.jsx';
+import {Prompters} from  './bootstrap-lib/prompters.jsx';
 
 /* Div <--> Input (prop edit) */
 var InEdit = React.createClass({
@@ -143,18 +144,21 @@ var Table = React.createClass({
 	/* This will force a rerendering on languae change */
  	contextTypes : {lang: React.PropTypes.string},
 
+	/* has a name prop */
+	propTypes: { name: React.PropTypes.string.isRequired },	
 
-	getInitialState: function(){
-		return { 
-		 };
+
+	componentWillMount: function () {
+		var prompter = Prompters[this.props.name];
+
+		if (!prompter) {
+			console.error(this.props.name+" is not a prompter!");
+
+		} else if (prompter.init) {
+			prompter.init(function(){this.forceUpdate();}.bind(this));
+			
+		}
 	},
-
-	data: /* TODO API */
-		[ 
-		{ "name1": "asd1" , "name2" : [1,2,3] , "name3" : "asd3" },
-		{ "name1": "asd1" , "name2" : [1,2,3] , "name3" : "asd3" },
-		{ "name1": "asd1" , "name2" : [1,2,3] , "name3" : "asd3" }
-	],
 
 	renderRow: function (data , index){
 		return ( <Editable_tr model={this.props.model} 
@@ -165,10 +169,12 @@ var Table = React.createClass({
 	},
 
 	render: function(){
+		var values = Prompters[this.props.name].getValues();
+
 		return (
 			<table className="table table-bordered">
 			<tbody>
-				{this.data.map(this.renderRow)}
+				{values.map(this.renderRow)}
 			</tbody>
 			</table>
 		);
@@ -184,14 +190,17 @@ var App = React.createClass({
  	contextTypes : {lang: React.PropTypes.string},
 
 	model: [
-		[ "Field1" , "Input" , "name1"],
-		[ "Field2" , "Dropdown" , "name2"],
-		[ "Field3" , "Input" , "name3"]
+		[ "Min" , "Input" , "min"],
+		[ "Max" , "Input" , "max"],
+		[ "Domain" , "Dropdown" , "domain"],
+		[ "Default lease duration", "Input", "default_lease_time"],
+		[ "Maximum lease duration", "Input", "max_lease_time"]
+	/*      [ "DHCP profile", "Dropdown", "dhcpprof"] XXX dhcpprof could be in conflict*/ 
 	],
 
 	render: function () {
 		return ( 
-			<Table model={this.model} name="prompter-example" > </Table>
+			<Table model={this.model} name="dhcp" > </Table>
 		);
 
 	}
