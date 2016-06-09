@@ -84,13 +84,15 @@ export var Prompters = {
 	/*************************  Handler name="domain" ***********************/
 		
 	domain: {
-		domains: [],
+		 domains: [],	// [{id: .. domain: ..} , ...]
+		_domains: [],	// [ "domain1", "domain2", ... ]
 
 		/* Fill the machines array with the API answer */
 		init : function (callback)  { 
 			C.getJSON(C.APIURL+'/domains', function(response){
+					this.domains = response;
 					response.forEach(function(val){
-						this.domains.push(val.name);
+						this._domains.push(val.name);
 					}.bind(this));
 					
 			}.bind(this), callback);
@@ -98,7 +100,18 @@ export var Prompters = {
 
 		/* Gives all the machines */
 		getValues: function (){
-			return this.domains;
+			return this._domains;
+		},
+
+		getById: function (id){
+			console.log("getbyid");
+			console.log(id);
+			for (var i = 0; i < this.domains.length; i++){
+				console.log(this.domains[i]);
+				if (this.domains[i].iddom == id) {
+					return this.domains[i].name;
+				}
+			}
 		}
 	},
 
@@ -177,7 +190,10 @@ export var Prompters = {
 			var dhcpranges = Prompters.dhcprange.getValues();
 			var domains = Prompters.domain.getValues();
 			for (var i = 0; i < dhcpranges.length; i++){
-				var cpy = $.extend({'domain': domains},dhcpranges[i]);
+
+				var value = Prompters.domain.getById(dhcpranges[i].iddom);
+				var doms = { 'values': domains, 'value': value };
+				var cpy = $.extend({'domain': doms}, dhcpranges[i]);
 				this.dhcp.push(cpy);
 
 			}
@@ -199,7 +215,6 @@ export var Prompters = {
 
 }
 
-
 var CallbackCountdown = function (callback, n) {
 	this.count = 0;
 	this.n = n;
@@ -213,5 +228,3 @@ var CallbackCountdown = function (callback, n) {
 }
 	
 	
-	
-

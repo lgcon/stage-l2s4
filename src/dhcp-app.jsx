@@ -37,7 +37,18 @@ var DdEdit = React.createClass({
  	contextTypes : {lang: React.PropTypes.string},
 
 	getInitialState: function(){
-		return { value: this.props.values[0] }
+		console.log(this.props);
+		if (Array.isArray(this.props.values)) {
+
+			return { value: this.props.values[0],
+				 values: this.props.values
+			       };
+		} else {
+
+			return { value: this.props.values.value,
+				 values: this.props.values.values
+			       }
+		}
 	},
 
 	/* As this is controlled Update the state with the new value */
@@ -53,7 +64,7 @@ var DdEdit = React.createClass({
 		if (this.props.edit === true) {
 			return (<F.Dropdown_internal superClass="dropdown" 
 				 onChange={this.onChange} value={this.state.value} >
-					{this.props.values.map(this.makeOption)}
+					{this.state.values.map(this.makeOption)}
 				</F.Dropdown_internal>
 			);
 		} else {
@@ -152,6 +163,7 @@ var Table = React.createClass({
 	getValues: function(){
 		this.setState({values: Prompters[this.props.name].getValues()})
 	},
+
 	componentWillMount: function () {
 		var prompter = Prompters[this.props.name];
 
