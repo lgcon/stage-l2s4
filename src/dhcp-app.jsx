@@ -74,7 +74,7 @@ var Editable_tr = React.createClass({
  	contextTypes : {lang: React.PropTypes.string},
 
 	getInitialState: function(){
-		return { edit: false };
+		return { edit: this.props.edit || false };
 	},
 
 
@@ -147,7 +147,11 @@ var Table = React.createClass({
 	/* has a name prop */
 	propTypes: { name: React.PropTypes.string.isRequired },	
 
+	getInitialState: function (){ return {values : [] }; },
 
+	getValues: function(){
+		this.setState({values: Prompters[this.props.name].getValues()})
+	},
 	componentWillMount: function () {
 		var prompter = Prompters[this.props.name];
 
@@ -155,7 +159,7 @@ var Table = React.createClass({
 			console.error(this.props.name+" is not a prompter!");
 
 		} else if (prompter.init) {
-			prompter.init(function(){this.forceUpdate();}.bind(this));
+			prompter.init(this.getValues.bind(this));
 			
 		}
 	},
@@ -163,20 +167,42 @@ var Table = React.createClass({
 	renderRow: function (data , index){
 		return ( <Editable_tr model={this.props.model} 
 				      data={data}
+				      edit={data._edit}
 			/>
 		);
 
 	},
 
-	render: function(){
-		var values = Prompters[this.props.name].getValues();
+	addRow: function (){
+		var newRow = $.extend({_edit: true},this.state.values[0]);
+	
+		// This loop	
+		for (var i = 0; i < this.props.model.length; i++){
 
+			// Set input fields as being empty 	
+			if (this.props.model[i][1].toLowerCase() == "input"){
+				var field = this.props.model[i][2];
+				newRow[field] = "";
+			}
+		}
+		
+		this.state.values.push(newRow);
+		this.setState({ values: this.state.values });
+		
+	},
+
+	render: function(){
 		return (
-			<table className="table table-bordered">
-			<tbody>
-				{values.map(this.renderRow)}
-			</tbody>
-			</table>
+			<div>
+				<table className="table table-bordered">
+					<tbody>
+						{this.state.values.map(this.renderRow)}
+					</tbody>
+				</table>
+				<F.Button onClick={this.addRow}>
+					Button
+				</F.Button>
+			</div>
 		);
 	}
 });
