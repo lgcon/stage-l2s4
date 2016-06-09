@@ -175,7 +175,16 @@ var Table = React.createClass({
 			
 		}
 	},
-
+	renderHead: function(){
+		function headerEl(mod){ return (<th> {mod[0]} </th>);}
+		return (
+			<thead>
+				<tr>
+				{this.props.model.map(headerEl)}
+				</tr>
+			</thead>
+		);
+	},
 	renderRow: function (data , index){
 		return ( <Editable_tr model={this.props.model} 
 				      data={data}
@@ -207,6 +216,7 @@ var Table = React.createClass({
 		return (
 			<div>
 				<table className="table table-bordered">
+					{this.renderHead()}
 					<tbody>
 						{this.state.values.map(this.renderRow)}
 					</tbody>
