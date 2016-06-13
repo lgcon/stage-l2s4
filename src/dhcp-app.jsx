@@ -179,13 +179,21 @@ var Editable_tr = React.createClass({
 
 
 
+	collectData: function(){
+		var data = {};
+		for (var i = 0; i < this.props.model.desc.length; i++){
+			var name = this.props.model.desc[i][2];
+			data[name] = $("#etr"+this.props.key+" [name='"+name+"']").val();
+		}
+		console.log(data);
+		return data;
+	},
+			
 	/* Active/desactive edit mode */	
 	switchMode: function(){
 		//  XXX do stuffs here
 		if (this.state.edit == true){
-			/* Save */
-			console.log("Save");
-			console.log(this.props.data);
+			this.collectData();
 		}
 		this.setState({ edit: !this.state.edit });
 	},
@@ -198,7 +206,7 @@ var Editable_tr = React.createClass({
 	
 	render: function(){
 		return (
-			<tr>
+			<tr id={"etr"+this.props.key} >
 				{this.props.model.desc.map(this.renderChild)}
 				<td className="outside">
 					<F.Button onClick={this.switchMode}>
