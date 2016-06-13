@@ -4,7 +4,9 @@ import {Translator, updateTranslations} from './lang.jsx';
 import * as F from './bootstrap-lib/form-utils.jsx';
 import {Prompters} from  './bootstrap-lib/prompters.jsx';
 
-/* Div <--> Input (prop edit) */
+/* Div <--> Input (prop edit) 
+ * Editable input field 
+ */
 var InEdit = React.createClass({
 
 	/* This will force a rerendering on languae change */
@@ -13,7 +15,10 @@ var InEdit = React.createClass({
 	getInitialState: function(){
 		return { value: this.props.children }
 	},
-
+	componentWillReceiveProps: function(newProps){
+		//this.setState({ value: newProps.children });
+		
+	},
 	/* As this is controlled Update the state with the new value */
 	onChange: function (event) {
 		this.setState({value: event.target.value});
@@ -25,19 +30,22 @@ var InEdit = React.createClass({
 				 onChange={this.onChange} />
 			);
 		} else {
-			return (<div  > {this.state.value} </div>);
+			return (<div> {this.state.value} </div>);
 		}
 	}
 });
 
-
+/* 
+ * Editable dropdown
+ * props:
+ *	-values: either a list either an object containing an attribute values (a list) and an attribute value (default value)
+ */
 var DdEdit = React.createClass({
 
 	/* This will force a rerendering on languae change */
  	contextTypes : {lang: React.PropTypes.string},
 
 	getInitialState: function(){
-		console.log(this.props);
 		if (Array.isArray(this.props.values)) {
 
 			return { value: this.props.values[0],
@@ -75,7 +83,22 @@ var DdEdit = React.createClass({
 
 
 
-/* props: model [ ["field" , "type", "name"], ... ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* props: model {key: ... , desc: [ ["field" , "type", "name"], ... ] }
  * data: { "name1" : ... , "name2" : .... }
  * submit: func(obj)
  */
@@ -130,15 +153,22 @@ var Editable_tr = React.createClass({
 		//  XXX do stuffs here
 		this.setState({ edit: !this.state.edit });
 	},
+
+	deleteRow: function(){
+		// XXX do stuffs here
+		this.props.onRemove(this.props.index);
+	},
 	
 	render: function(){
-		
 		return (
 			<tr>
-				{this.props.model.map(this.renderChild)}
+				{this.props.model.desc.map(this.renderChild)}
 				<td className="outside">
 					<F.Button onClick={this.switchMode}>
-						Button
+						Edit/Save
+					</F.Button>
+					<F.Button onClick={this.deleteRow}>
+						Remove
 					</F.Button>
 				</td>
 			</tr>
@@ -163,6 +193,7 @@ var Table = React.createClass({
 	getValues: function(){
 		this.setState({values: Prompters[this.props.name].getValues()})
 	},
+
 
 	componentWillMount: function () {
 		var prompter = Prompters[this.props.name];
@@ -237,15 +268,17 @@ var App = React.createClass({
 	/* This will force a rerendering on languae change */
  	contextTypes : {lang: React.PropTypes.string},
 
-	model: [
-		[ "Min" , "Input" , "min"],
-		[ "Max" , "Input" , "max"],
-		[ "Domain" , "Dropdown" , "domain"],
-		[ "Default lease duration", "Input", "default_lease_time"],
-		[ "Maximum lease duration", "Input", "max_lease_time"]
-	/*      [ "DHCP profile", "Dropdown", "dhcpprof"] XXX dhcpprof could be in conflict*/ 
-	],
-
+	model: { key: "iddhcprange",
+		 desc: [ 
+				[ "Min" , "Input" , "min"],
+				[ "Max" , "Input" , "max"],
+				[ "Domain" , "Dropdown" , "domain"],
+				[ "Default lease duration", "Input", "default_lease_time"],
+				[ "Maximum lease duration", "Input", "max_lease_time"]
+			/*      [ "DHCP profile", "Dropdown", "dhcpprof"] XXX dhcpprof could be in conflict*/ 
+		]
+	},
+		
 	render: function () {
 		return ( 
 			<Table model={this.model} name="dhcp" > </Table>

@@ -3,6 +3,7 @@ const webpack = require('webpack');
 module.exports = {
     entry: {
 	'add-app': './src/add-app.jsx',
+	'dhcp-app': './src/dhcp-app.jsx',
 	'common' : [ 'react' , 'react-dom' ]
     },
     output: {
