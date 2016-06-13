@@ -299,6 +299,7 @@ var Table = React.createClass({
 });
 	
 /** 
+ * The input fields can be not defined ---> they will be rendered as empty
  */
 var App = React.createClass({
 

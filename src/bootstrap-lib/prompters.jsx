@@ -206,6 +206,10 @@ export var Prompters = {
 		/* Gives all the addresses */
 		getValues: function (){
 			return this.dhcp;
+		},
+
+		getEmptyRow: function(){
+			return {'domain':  Prompters.domain.getValues() };
 		}
 
 
