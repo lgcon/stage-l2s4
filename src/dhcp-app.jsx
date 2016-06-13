@@ -195,10 +195,10 @@ var Editable_tr = React.createClass({
 				{this.props.model.desc.map(this.renderChild)}
 				<td className="outside">
 					<F.Button onClick={this.switchMode}>
-						Edit/Save
+						{ this.state.edit ? "Save" : "Edit" }
 					</F.Button>
 					<F.Button onClick={this.deleteRow}>
-						Remove
+						{ this.state.edit ? "Cancell" : "Remove" }
 					</F.Button>
 				</td>
 			</tr>
