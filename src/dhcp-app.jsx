@@ -98,9 +98,22 @@ var DdEdit = React.createClass({
 
 
 
-/* props: model {key: ... , desc: [ ["field" , "type", "name"], ... ] }
- * data: { "name1" : ... , "name2" : .... }
- * submit: func(obj)
+/**
+ * An editable table's row, allows the user to edit the values
+ * and/or save/remove the row.
+ * @properties:
+ *	-model, contains the descriptionof the data contained into
+ *		the row (see the component EdiTable)
+ *		(ex: {key: ... , desc: [ ["field" , "type", "name"], ... ]} )
+ *	-data,  an object containing a certain number of "name": "value" pairs,
+ *		where "name" correspond to one of the names specified on the model.
+ *	 	If the type specified on the model is "input" and the data for this
+ *		field is not specified then it will be an empty string by default. 
+ *		The data of other types (!= "input") must always be specified.
+ *	TODO complete
+ *	-onRemove
+ *	-onSave
+ *	-on...
  */
 var Editable_tr = React.createClass({
 
@@ -112,6 +125,12 @@ var Editable_tr = React.createClass({
 	},
 
 
+	/**
+	 * Used by this.renderChild to render the correct
+	 * child depending the description on the model
+	 * @param type, type specified into the model property
+	 * @param content, the content of the child to render
+	 */
 	renderType: function (type, content){
 		switch ( type.toLowerCase() ) {
 
@@ -135,6 +154,13 @@ var Editable_tr = React.createClass({
 				
 	},
 
+
+	/**
+         * Render one element of the row (child)
+         * @param desc, the description of the element 
+	 * 	   defined into the model props
+	 * @param index, number of the child (usually passed directly by .map())
+	 */
 	renderChild: function (desc, index) {
 
 		// The label at desc[0] is not used by this component
@@ -148,12 +174,16 @@ var Editable_tr = React.createClass({
 		);
 			
 	},
-	
+
+
+
+	/* Active/desactive edit mode */	
 	switchMode: function(){
 		//  XXX do stuffs here
 		this.setState({ edit: !this.state.edit });
 	},
 
+	/* Called when the user remove this row */
 	deleteRow: function(){
 		// XXX do stuffs here
 		this.props.onRemove(this.props.index);
@@ -238,10 +268,6 @@ var Table = React.createClass({
 		this.setState({values: this.state.values});
 	},
 
-
-
-
-
 	emptyRowsCount: 0, // Used to define unique keys when adding empty rows
 
 	addRow: function (){
@@ -297,6 +323,9 @@ var Table = React.createClass({
 		);
 	}
 });
+
+
+
 	
 /** 
  * The input fields can be not defined ---> they will be rendered as empty
