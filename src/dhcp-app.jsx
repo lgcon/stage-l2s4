@@ -206,38 +206,76 @@ var Table = React.createClass({
 			
 		}
 	},
+
 	renderHead: function(){
-		function headerEl(mod){ return (<th> {mod[0]} </th>);}
+		function headerEl(mod,index){ return (<th key={"th"+index}> {mod[0]} </th>);}
 		return (
 			<thead>
 				<tr>
-				{this.props.model.map(headerEl)}
+				{this.props.model.desc.map(headerEl)}
 				</tr>
 			</thead>
 		);
 	},
+
 	renderRow: function (data , index){
-		return ( <Editable_tr model={this.props.model} 
+
+		var uniqkey = data[this.props.model.key];
+
+		return ( <Editable_tr key={"trw"+uniqkey}
+				      model={this.props.model} 
 				      data={data}
 				      edit={data._edit}
+				      index={index}
+				      onRemove={this.removeRow}
 			/>
 		);
 
 	},
+	
+	removeRow: function (index) {
+		this.state.values.splice(index,1);
+		this.setState({values: this.state.values});
+	},
+
+
+
+
+
+	emptyRowsCount: 0, // Used to define unique keys when adding empty rows
 
 	addRow: function (){
-		var newRow = $.extend({_edit: true},this.state.values[0]);
-	
-		// This loop	
-		for (var i = 0; i < this.props.model.length; i++){
 
-			// Set input fields as being empty 	
-			if (this.props.model[i][1].toLowerCase() == "input"){
-				var field = this.props.model[i][2];
-				newRow[field] = "";
-			}
-		}
+		var newRow = { _edit: true }; // Add in edit mode
+			
+		if (this.state.values.length > 0){	
+
+			/* Use the first row as example */
+			newRow = $.extend(newRow,this.state.values[0]);
 		
+			for (var i = 0; i < this.props.model.desc.length; i++){
+				/* Leave inputs blanks */
+				var type = this.props.model.desc[i][1];
+				if ( type.toLowerCase() == "input"){
+					var field = this.props.model.desc[i][2];
+					newRow[field] = "";
+				}
+			}
+
+		} else if (Prompters[this.props.name].getEmptyRow) {
+			/* Ask for an empty row to the prompter */
+			var emptyRow = Prompters[this.props.name].getEmptyRow();
+			newRow = $.extend(newRow,emptyRow);
+
+		} else {
+			console.error("Cannot fetch an the values of an empty row");
+			return;
+		}
+
+		// Set an unique key
+		newRow[this.props.model.key] = "___emptyRowId"+this.emptyRowsCount++;
+
+		// Add to the state	
 		this.state.values.push(newRow);
 		this.setState({ values: this.state.values });
 		
