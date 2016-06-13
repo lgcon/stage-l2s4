@@ -179,34 +179,50 @@ var Editable_tr = React.createClass({
 
 
 
-	collectData: function(){
+	collectValues: function(){
 		var data = {};
 		for (var i = 0; i < this.props.model.desc.length; i++){
 			var name = this.props.model.desc[i][2];
-			data[name] = $("#etr"+this.props.key+" [name='"+name+"']").val();
+			// Use the id specified into the render in order to identify the row
+			data[name] = $("#etr"+this.props.reactKey+" [name='"+name+"']").val();
 		}
-		console.log(data);
-		return data;
+		var uniquekey = this.props.data[this.props.model.key];
+		return {key:  uniquekey, data: data };
 	},
 			
 	/* Active/desactive edit mode */	
 	switchMode: function(){
-		//  XXX do stuffs here
+
 		if (this.state.edit == true){
-			this.collectData();
+			var data = this.collectValues();
+
+			if (data.key.toString().startsWith("__")) { // Invalid api id (given from the application)
+				this.props.handler.saveNewRow(data);
+			} else {
+				this.props.handler.updateRow(data);
+			}
 		}
+
 		this.setState({ edit: !this.state.edit });
 	},
 
 	/* Called when the user remove this row */
 	deleteRow: function(){
 		// XXX do stuffs here
-		this.props.onRemove(this.props.index);
+		var data = this.collectValues();
+		if (this.state.edit == false) {
+			this.props.handler.deleteRow(data);
+			this.props.onRemove(this.props.index);
+		} else if (data.key.toString().startsWith("__")) { // Invalid api id (given from the application)
+			this.props.onRemove(this.props.index);
+		} else {
+			this.setState({ edit: !this.state.edit });
+		}
 	},
 	
 	render: function(){
 		return (
-			<tr id={"etr"+this.props.key} >
+			<tr id={"etr"+this.props.reactKey} >
 				{this.props.model.desc.map(this.renderChild)}
 				<td className="outside">
 					<F.Button onClick={this.switchMode}>
@@ -268,11 +284,13 @@ var Table = React.createClass({
 		var uniqkey = data[this.props.model.key];
 
 		return ( <Editable_tr key={"trw"+uniqkey}
+				      reactKey={"trw"+uniqkey}
 				      model={this.props.model} 
 				      data={data}
 				      edit={data._edit}
 				      index={index}
 				      onRemove={this.removeRow}
+				      handler={Prompters[this.props.name]}
 			/>
 		);
 
@@ -314,7 +332,7 @@ var Table = React.createClass({
 		}
 
 		// Set an unique key
-		newRow[this.props.model.key] = "___emptyRowId"+this.emptyRowsCount++;
+		newRow[this.props.model.key] = "___NotValidId"+this.emptyRowsCount++;
 
 		// Add to the state	
 		this.state.values.push(newRow);

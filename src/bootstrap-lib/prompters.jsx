@@ -210,6 +210,21 @@ export var Prompters = {
 
 		getEmptyRow: function(){
 			return {'domain':  Prompters.domain.getValues() };
+		},
+
+		saveNewRow: function(input){
+			console.log("--------- SAVE ----------");
+			console.log("POST /api/dhcprange "+JSON.stringify(input.data));
+		},
+
+		updateRow: function(input){
+			console.log("--------- UPDATE ----------");
+			console.log("PUT /api/dhcprange/"+input.key+" "+JSON.stringify(input.data));
+		},
+
+		deleteRow: function(input){
+			console.log("--------- DELETE ----------");
+			console.log("DELETE /api/dhcprange/"+input.key);
 		}
 
 

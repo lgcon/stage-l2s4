@@ -195,7 +195,7 @@ export var Dropdown_internal = React.createClass({ /*TODO change name */
 	   and execute the onChange callback */
 	handleClick: function(child, event){
 			event.preventDefault();
-			var newValue = child.props.children;
+			var newValue = child.props.children[1];	// <el> ... </el> generates trailing and leading empty strings
 			this.setState({value: newValue});
 			if (this.props.onChange) this.props.onChange(newValue);
 			
@@ -208,7 +208,8 @@ export var Dropdown_internal = React.createClass({ /*TODO change name */
 			return (
 				<li key={"dopt"+index}>
 					<a href="#" onClick={this.handleClick.bind(this,child)} >
-					{translate(child.props.children)}
+	 				{/*<el> ... </el> generates trailing and leading empty strings */}
+					{translate(child.props.children[1])}
 					</a>
 				</li>
 			);
@@ -217,7 +218,6 @@ export var Dropdown_internal = React.createClass({ /*TODO change name */
 
 	/* Main render */
 	render: function(){
-
 		return (
 			<div className={this.props.superClass}>
 				<button className="btn btn-default dropdown-toggle" 
