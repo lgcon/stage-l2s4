@@ -27,7 +27,7 @@ var InEdit = React.createClass({
 	render: function(){
 		if (this.props.edit === true) {
 			return (<input value={this.state.value} style={{width: "100%"}}
-				 onChange={this.onChange} />
+				 onChange={this.onChange} name={this.props.name} />
 			);
 		} else {
 			return (<div> {this.state.value} </div>);
@@ -71,7 +71,8 @@ var DdEdit = React.createClass({
 	render: function(){
 		if (this.props.edit === true) {
 			return (<F.Dropdown_internal superClass="dropdown" 
-				 onChange={this.onChange} value={this.state.value} >
+				 onChange={this.onChange} value={this.state.value}
+				 name={this.props.name}  >
 					{this.state.values.map(this.makeOption)}
 				</F.Dropdown_internal>
 			);
@@ -128,15 +129,17 @@ var Editable_tr = React.createClass({
 	/**
 	 * Used by this.renderChild to render the correct
 	 * child depending the description on the model
-	 * @param type, type specified into the model property
+	 * @param desc, description specified into the model property
 	 * @param content, the content of the child to render
 	 */
-	renderType: function (type, content){
-		switch ( type.toLowerCase() ) {
+	renderType: function (desc, content){
+		switch ( desc[1].toLowerCase() ) {
 
 			case "input" :
 				return (
-					<InEdit edit={this.state.edit}>
+					<InEdit edit={this.state.edit}
+						name={desc[2]}
+					>
 						{content}
 					</InEdit>
 				);
@@ -145,6 +148,7 @@ var Editable_tr = React.createClass({
 				return (
 					<DdEdit edit={this.state.edit} 
 						values={content}
+						name={desc[2]}
 					/>
 				);
 				
@@ -163,13 +167,11 @@ var Editable_tr = React.createClass({
 	 */
 	renderChild: function (desc, index) {
 
-		// The label at desc[0] is not used by this component
-		var type = desc[1]; var name = desc[2];
-		var content = this.props.data[name];
+		var content = this.props.data[desc[2]];
 
 		return (
 			<td key={"edr"+index} className="col-md-1" > 
-				{this.renderType(type, content)}
+				{this.renderType(desc, content)}
 			</td>
 		);
 			
@@ -180,6 +182,11 @@ var Editable_tr = React.createClass({
 	/* Active/desactive edit mode */	
 	switchMode: function(){
 		//  XXX do stuffs here
+		if (this.state.edit == true){
+			/* Save */
+			console.log("Save");
+			console.log(this.props.data);
+		}
 		this.setState({ edit: !this.state.edit });
 	},
 
